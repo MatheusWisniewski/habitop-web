@@ -1,0 +1,63 @@
+@import 'responsive';
+
+.circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px;
+    border: 1px solid black;
+    box-shadow: 0 2px 3px 1px lightgray;
+    
+    & > .link {
+        display: inline-block;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: black;
+
+        .text {
+            display: inline-block;
+            margin: 7px 11px;
+            box-sizing: border-box;
+            font-family: monospace;
+            font-size: 18px;
+
+            @include for-sm-up {
+                font-size: 25px;
+                margin: 10px 16px;
+            }
+        }
+    }
+}
+
+.month-circle {
+    height: 40px;
+    width: 40px;
+
+    @include for-sm-up {
+        height: 60px;
+        width: 60px;
+    }
+}
+
+.opaque {
+    opacity: 0.4;
+}
+
+.current-date {
+    box-shadow: 0 0 0 4px yellow;
+}
+
+.one-checked {
+    color: green;
+    border-color: green;
+}
+
+.all-checked {
+    border-color: green;
+    background-color: green;
+    color: white;
+}

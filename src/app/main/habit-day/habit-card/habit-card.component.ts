@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Habit } from 'src/app/shared/models/habit.model';
+import { HabitCheck } from 'src/app/shared/models/habit-check.model';
+import { Router } from '@angular/router';
+import { HabitService } from 'src/app/shared/services/habit/habit.service';
 
 @Component({
   selector: 'app-habit-card',
@@ -7,9 +11,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HabitCardComponent implements OnInit {
 
-  constructor() { }
+  @Input() habit: Habit;
+  @Input() check: HabitCheck;
+
+  constructor(
+    private router: Router,
+    private habitService: HabitService
+  ) { }
 
   ngOnInit() {
   }
 
+  onClickedEditItem() {
+    const normalize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const lowerCase = (str: string) => str.toLowerCase();
+    const replaceStringsWithDash = (str: string) => str.replace(/\s/g, '-');
+
+    const formattedHabitName = replaceStringsWithDash(lowerCase(normalize(this.habit.name)));
+
+    this.router.navigateByUrl(`/edit/${formattedHabitName}`);
+  }
+
+  onClickedCheck() {
+    this.check.isChecked = !this.check.isChecked;
+  }
 }

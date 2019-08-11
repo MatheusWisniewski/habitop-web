@@ -1,1 +1,14 @@
-<p>date-circle works!</p>
+<div class="circle" [ngClass]="{
+    'month-circle': format === 'month',
+    'opaque': opaque,
+    'current-date': isCurrentDate
+}">
+    <a class="link"
+        routerLink="/{{date}}" 
+        routerLinkActive="active"> 
+
+        <span class="text">
+            {{displayText}}
+        </span>
+    </a>
+</div>

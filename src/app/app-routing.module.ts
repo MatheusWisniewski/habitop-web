@@ -9,7 +9,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { WelcomeDefaultComponent } from './welcome/welcome-default/welcome-default.component';
 import { HabitDayComponent } from './main/habit-day/habit-day.component';
 import { CalendarComponent } from './main/calendar/calendar.component';
-import { CalendarMonthComponent } from './main/calendar/calendar-month/calendar-month.component';
 import { EditHabitComponent } from './main/edit-habit/edit-habit.component';
 
 
@@ -53,11 +52,15 @@ const routes: Routes = [
       },
       {
         path: 'calendar',
-        component: CalendarComponent,
         children: [
           {
             path: ':date',
-            component: CalendarMonthComponent
+            component: CalendarComponent
+          },
+          {
+            path: '',
+            pathMatch: 'full',
+            component: CalendarComponent
           }
         ]
       },
@@ -72,7 +75,14 @@ const routes: Routes = [
         path: 'edit',
         children: [
           {
-            path: ':id',
+            path: ':name',
+            component: EditHabitComponent,
+            data: {
+              isNew: false
+            }
+          },
+          {
+            path: '',
             component: EditHabitComponent,
             data: {
               isNew: false
@@ -93,7 +103,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    onSameUrlNavigation: 'reload'
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

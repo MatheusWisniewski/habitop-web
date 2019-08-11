@@ -1,0 +1,113 @@
+@import 'variables'; 
+
+// BREAKPOINTS
+@mixin for-xs-down {  
+    @media (max-width: map-get($breakpoints-bootstrap, xs-max)) { @content; }
+}
+
+@mixin for-sm-up {
+    @media (min-width: map-get($breakpoints-bootstrap, sm-min)) { @content; }
+}
+
+@mixin for-sm-down {
+    @media (max-width: map-get($breakpoints-bootstrap, sm-max)) { @content; }
+}
+
+@mixin for-md-up {
+    @media (min-width: map-get($breakpoints-bootstrap, md-min)) { @content; }
+}
+
+@mixin for-md-down {
+    @media (max-width: map-get($breakpoints-bootstrap, md-max)) { @content; }
+}
+
+@mixin for-lg-up {
+    @media (min-width: map-get($breakpoints-bootstrap, lg-min)) { @content; }
+}
+
+@mixin for-lg-down {
+    @media (max-width: map-get($breakpoints-bootstrap, lg-max)) { @content; }
+}
+
+@mixin for-xl-up {
+    @media (min-width: map-get($breakpoints-bootstrap, xl-min)) { @content; }
+}
+
+@mixin many-sizes($key, $map) {
+    @if map-has-key($map, xs) {
+        #{$key}: map-get($map, xs);
+    }
+    @if map-has-key($map, sm) {
+        @include for-sm-up() {
+            #{$key}: map-get($map, sm);
+        }
+    }
+    @if map-has-key($map, md) {
+        @include for-md-up() {
+            #{$key}: map-get($map, md);
+        }
+    }
+    @if map-has-key($map, lg) {
+        @include for-lg-up() {
+            #{$key}: map-get($map, lg);
+        }
+    }
+    @if map-has-key($map, xl) {
+        @include for-xl-up() {
+            #{$key}: map-get($map, xl);
+        }
+    }
+}
+
+@mixin many-sizes-from-sm($key, $sm-up-value, $md-up-value: undefined, $lg-up-value: undefined, $xl-up-value: undefined) {
+    
+    @include for-sm-up() {
+        #{$key}: $sm-up-value;
+    }
+
+    @if $md-up-value != undefined {
+        @include many-sizes-from-md($key, $md-up-value, $lg-up-value, $xl-up-value)
+    }
+}
+
+@mixin many-sizes-from-md($key, $md-up-value, $lg-up-value: undefined, $xl-up-value: undefined) {
+    
+    @include for-md-up() {
+        #{$key}: $md-up-value;
+    }
+
+    @if $lg-up-value != undefined {
+        @include many-sizes-from-lg($key, $lg-up-value, $xl-up-value)
+    }
+}
+
+@mixin many-sizes-from-lg($key, $lg-up-value, $xl-up-value: undefined) {
+
+    @include for-lg-up() {
+        #{$key}: $lg-up-value;
+    }
+
+    @if $xl-up-value != undefined {
+        @include for-xl-up() {
+            #{$key}: $xl-up-value;
+        }
+    }
+}
+
+@mixin set-breakpoint-values($key, $difference: 0px) {
+    @include for-sm-up() {
+        #{$key}: calc(#{map-get($map: $breakpoints-bootstrap, $key: xs-max)} - #{$difference});
+    }
+
+    @include for-md-up() {
+        #{$key}: calc(#{map-get($map: $breakpoints-bootstrap, $key: sm-max)} - #{$difference});
+    }
+
+    @include for-lg-up() {
+        #{$key}: calc(#{map-get($map: $breakpoints-bootstrap, $key: md-max)} - #{$difference});
+    }
+
+    @include for-xl-up() {
+        #{$key}: calc(#{map-get($map: $breakpoints-bootstrap, $key: lg-max)} - #{$difference});
+    }
+}

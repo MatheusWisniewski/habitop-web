@@ -11,7 +11,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { WelcomeDefaultComponent } from './welcome/welcome-default/welcome-default.component';
 import { HabitDayComponent } from './main/habit-day/habit-day.component';
 import { CalendarComponent } from './main/calendar/calendar.component';
-import { CalendarMonthComponent } from './main/calendar/calendar-month/calendar-month.component';
 import { EditHabitComponent } from './main/edit-habit/edit-habit.component';
 import { HabitCardComponent } from './main/habit-day/habit-card/habit-card.component';
 import { DateCircleComponent } from './shared/components/date-circle/date-circle.component';
@@ -22,6 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
+import { HeaderComponent } from './shared/components/header/header.component';
 
 const materialModules = [
   MatInputModule,
@@ -43,10 +43,10 @@ const materialModules = [
     WelcomeDefaultComponent,
     HabitDayComponent,
     CalendarComponent,
-    CalendarMonthComponent,
     EditHabitComponent,
     HabitCardComponent,
-    DateCircleComponent
+    DateCircleComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

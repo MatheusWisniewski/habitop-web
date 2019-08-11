@@ -1,0 +1,29 @@
+@import 'responsive';
+
+.header {
+    height: 50px;
+    background-color: rgb(99, 207, 99);
+    cursor: pointer;
+
+    @include for-sm-up {
+        height: 70px;
+    }
+
+    & > .app-name {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 100%;
+        padding-left: 20px;
+
+        & > .title {
+            margin-left: 10px;
+            font-size: 25px;
+            color: white;
+
+            @include for-sm-up {
+                font-size: 30px;
+            }
+        }
+    }
+}

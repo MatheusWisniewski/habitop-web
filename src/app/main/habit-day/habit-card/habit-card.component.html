@@ -1,1 +1,36 @@
-<p>habit-card works!</p>
+<div class="habit-card">
+    <div class=left
+        (click)="onClickedEditItem()">
+
+        <mat-icon color="{{habit?.color}}">{{habit?.icon}}</mat-icon>
+    </div>
+
+    <div class="center"
+        (click)="onClickedEditItem()">
+        
+        <div class="top">
+            <span class="title" [ngClass]="{'title-checked': check?.isChecked}">{{habit?.name}}</span>
+        </div>
+
+        <div class="bottom">
+            <mat-icon *ngIf="!check?.isChecked" color="{{habit?.color}}">play_arrow</mat-icon>
+            <mat-icon *ngIf="check?.isChecked" color="primary">check_box</mat-icon>
+
+            <div class="text">
+                <span *ngIf="check?.streak > 0">
+                    Sequência atual: {{check?.streak}}<span *ngIf="check?.isChecked">! FEITO!</span><span *ngIf="!check?.isChecked">. Faça hoje!</span>
+                </span>
+    
+                <span *ngIf="!check?.streak || check?.streak === 0">
+                    Comece a sequência hoje!
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="right"
+        (click)="onClickedCheck()">
+        <mat-icon *ngIf="!check?.isChecked">check_box_outline_blank</mat-icon> 
+        <mat-icon *ngIf="check?.isChecked" color="secondary">check_box</mat-icon> 
+    </div>
+</div>

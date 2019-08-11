@@ -1,0 +1,90 @@
+@import 'responsive';
+
+.calendar {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.header {
+    flex: 0 1 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+
+    @include for-sm-up {
+        padding: 20px;
+    }
+
+    @include for-md-up {
+        padding: 30px;
+    }
+
+    @include for-lg-up {
+        padding: 30px 40px;
+    }
+
+    & > .title-wrapper {
+        & > .title {
+            text-align: center;
+            font-size: 25px;
+            font-weight: bold;
+
+            @include for-sm-up {
+                font-size: 30px;
+            }
+        }
+    }
+}
+
+.center {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgb(231, 230, 230);
+
+    @include for-sm-up {
+        padding: 10px;
+    }
+
+    & > .days-wrapper {
+        overflow-y: auto;
+        min-height: 0;
+    }
+}
+
+.week-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+
+    @include for-sm-up {
+        padding: 20px;
+    }
+
+    @include for-md-up {
+        padding: 20px 30px;
+    }
+
+    @include for-lg-up {
+        padding: 230x 40px;
+    }
+}
+
+.weekday {
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    width: 40px;
+
+    @include for-sm-up {
+        width: 60px;
+        font-size: 25px;
+    }
+}

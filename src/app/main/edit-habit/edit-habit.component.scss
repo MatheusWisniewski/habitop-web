@@ -1,0 +1,36 @@
+@import 'responsive';
+
+.habit-form {
+    & > .header {
+        flex: 0 1 auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+    
+        @include for-sm-up {
+            padding: 20px;
+        }
+    
+        @include for-md-up {
+            padding: 30px;
+        }
+    
+        @include for-lg-up {
+            padding: 30px 40px;
+        }
+    
+        & > .title-wrapper {
+            & > .title {
+                text-align: center;
+                font-size: 25px;
+                font-weight: bold;
+    
+                @include for-sm-up {
+                    font-size: 30px;
+                }
+            }
+        }
+    }
+}

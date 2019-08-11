@@ -1,3 +1,60 @@
-<h3>{{title}}</h3>
+<div class="habit-day">
+    <div class="header">
+        <button mat-button
+            color="basic"
+            routerLink="/{{previousDate}}" 
+            routerLinkActive="active">
+            
+            <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
 
-<a routerLink="/calendar" routerLinkActive="active">Calendário</a>
+        <div class="title-wrapper">
+            <div class="title">{{title}}</div>
+        </div>
+
+        <button mat-button
+            color="basic"
+            routerLink="/{{nextDate}}" 
+            routerLinkActive="active">
+            
+            <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+    </div>
+
+    <div class="center">
+        <div class="scroll-container">
+            <app-habit-card *ngFor="let habit of filteredHabits"
+                [habit]="habit"
+                [check]="habitDate?.getCheckForHabitWithId(habit?.id)">
+            </app-habit-card>
+        </div>
+        
+        <button mat-fab
+            class="floating-button"
+            color="accent" 
+            aria-label="Novo hábito" 
+            routerLink="/new" 
+            routerLinkActive="active">
+            
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    
+    <div class="bottom">
+        <div class="circles">
+            <app-date-circle *ngFor="let date of previousWeekDates"
+                [date]="date"
+                format="week">
+            </app-date-circle>
+
+            <button mat-icon-button color="accent" 
+                aria-label="Ver calendário" 
+                routerLink="/calendar/{{monthDate}}" 
+                routerLinkActive="active">
+                
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>
+

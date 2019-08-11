@@ -1,3 +1,57 @@
-<p>edit-habit works!</p>
+<form class="habit-form" 
+    [formGroup]="habitForm" 
+    (ngSubmit)="onSubmit()">
 
-{{isNew}}
+    <div class="header">
+        <button mat-button
+            color="basic"
+            routerLink="/{previousDate}}" 
+            routerLinkActive="active">
+            
+            Voltar
+        </button>
+
+        <div class="title-wrapper">
+            <div class="title">{{title}}</div>
+        </div>
+
+        <button mat-button
+            type="submit"
+            color="basic"
+            [disabled]="!habitForm?.valid"
+            (click)="onClickedSave()">
+            
+            Salvar
+        </button>
+    </div>
+
+    <div class="name-row">
+        <mat-form-field class="name-wrapper">
+            <input matInput 
+                formControlName="name"
+                placeholder="Nome" />
+        </mat-form-field>
+    </div>
+
+    <div class="icon-color-row">
+
+        <mat-form-field class="name-wrapper">
+            <input matInput 
+                formControlName="icon"
+                placeholder="Ícone" />
+        </mat-form-field>
+    
+        <mat-form-field class="name-wrapper">
+            <input matInput 
+                formControlName="color"
+                placeholder="Cor" />
+        </mat-form-field>
+    </div>
+
+
+    
+
+    <div class="modal">
+
+    </div>
+</form>

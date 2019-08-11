@@ -1,3 +1,44 @@
-<p>calendar works!</p>
+<div class="calendar">
+    <div class="header">
+        <button mat-button
+            color="basic"
+            routerLink="/calendar/{{previousMonthDate}}" 
+            routerLinkActive="active">
+            
+            <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
 
-<router-outlet></router-outlet>
+        <div class="title-wrapper">
+            <div class="title">{{title}}</div>
+        </div>
+
+        <button mat-button
+            color="basic"
+            routerLink="/calendar/{{nextMonthDate}}" 
+            routerLinkActive="active">
+            
+            <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+    </div>
+    
+    <div class="center">
+        <div class="week-row">
+            <div *ngFor="let weekday of weekdays"
+                class="weekday">
+                {{weekday}}
+            </div>
+        </div>
+
+        <div class="days-wrapper">
+            <div *ngFor="let week of datesMatrix" 
+                class="week-row">
+                <app-date-circle *ngFor="let date of week"
+                    [date]="date"
+                    [opaque]="notThisMonth(date)">
+                </app-date-circle>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
