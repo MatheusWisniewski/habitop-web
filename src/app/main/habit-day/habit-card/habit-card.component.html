@@ -1,24 +1,32 @@
 <div class="habit-card">
-    <div class=left
-        (click)="onClickedEditItem()">
+    <div class="left"
+        (click)="onClickedEditItem()"
+        title="Clique para editar">
 
-        <mat-icon color="{{habit?.color}}">{{habit?.icon}}</mat-icon>
+        <div class="{{check?.isChecked ? 'gray-theme' :iconService?.getClass(habit?.color)}}">
+            <mat-icon class="icon" color="{{check?.isChecked ? 'warn' : iconService?.getMatColor(habit?.color)}}">{{habit?.icon}}</mat-icon>
+        </div>
     </div>
 
     <div class="center"
-        (click)="onClickedEditItem()">
+        (click)="onClickedEditItem()"
+        title="Clique para editar">
         
         <div class="top">
             <span class="title" [ngClass]="{'title-checked': check?.isChecked}">{{habit?.name}}</span>
         </div>
 
         <div class="bottom">
-            <mat-icon *ngIf="!check?.isChecked" color="{{habit?.color}}">play_arrow</mat-icon>
-            <mat-icon *ngIf="check?.isChecked" color="primary">check_box</mat-icon>
+            <div *ngIf="!check?.isChecked" class="{{iconService?.getClass(habit?.color)}}">
+                <mat-icon color="{{iconService?.getMatColor(habit?.color)}}">play_arrow</mat-icon>
+            </div>
+            <div *ngIf="check?.isChecked">
+                <mat-icon color="primary">check_box</mat-icon>
+            </div>
 
             <div class="text">
-                <span *ngIf="check?.streak > 0">
-                    Sequência atual: {{check?.streak}}<span *ngIf="check?.isChecked">! FEITO!</span><span *ngIf="!check?.isChecked">. Faça hoje!</span>
+                <span *ngIf="check?.streak > 0" [ngClass]="{'done': check?.isChecked}">
+                    {{check?.streak}} em seguida<span *ngIf="check?.isChecked">! FEITO!</span><span *ngIf="!check?.isChecked">. Faça hoje!</span>
                 </span>
     
                 <span *ngIf="!check?.streak || check?.streak === 0">
@@ -29,8 +37,9 @@
     </div>
 
     <div class="right"
-        (click)="onClickedCheck()">
-        <mat-icon *ngIf="!check?.isChecked">check_box_outline_blank</mat-icon> 
-        <mat-icon *ngIf="check?.isChecked" color="secondary">check_box</mat-icon> 
+        (click)="onClickedCheck()"
+        title="Clique para marcar como feito">
+        <mat-icon *ngIf="!check?.isChecked" class="icon">check_box_outline_blank</mat-icon> 
+        <mat-icon *ngIf="check?.isChecked" color="primary" class="icon">check_box</mat-icon> 
     </div>
 </div>

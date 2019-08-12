@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import 'moment/locale/pt-br';
 import { Subscription } from 'rxjs';
 import { DateCircleComponent } from 'src/app/shared/components/date-circle/date-circle.component';
+import { CheckedDateService } from 'src/app/shared/services/checked-date/checked-date.service';
 moment.locale('pt-BR');
 
 @Component({
@@ -24,12 +25,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
   nextMonthDate: string;
   title: string;
   weekdays: string[] = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  numberOfPerfectDays: number;
 
   datesMatrix: string[][] = [];
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private checkedDateService: CheckedDateService
   ) {
     this.subscriptions.push(
       this.router.events.subscribe((event) => {
@@ -37,6 +40,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
           // do some logic again when I click same url
           this.formatRouterDate();
           this.buildDatesMatrix();
+          this.getNumberOfPerfectDays();
         }
       })
     );
@@ -86,5 +90,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   notThisMonth(date: string): boolean {
     return moment(date, 'DD-MM-YYYY').month() !== this.momentDate.month();
+  }
+
+  getNumberOfPerfectDays() {
+    this.numberOfPerfectDays = this.checkedDateService.getNumberOfPerfectDaysOnMonth(this.momentDate);
   }
 }

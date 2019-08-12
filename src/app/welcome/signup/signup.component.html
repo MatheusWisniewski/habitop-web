@@ -1,19 +1,49 @@
-<p>Cadastro</p>
+<div class="signup">
+    <div class="title">Cadastro</div>
 
-<form class="example-form">
-    <mat-form-field class="example-full-width">
-        <input matInput placeholder="Email" />
-    </mat-form-field>
+    <form [formGroup]="signupForm" 
+        (ngSubmit)="onSubmit()" 
+        class="form">
+    
+        <mat-form-field class="field">
+            <input matInput 
+                formControlName="email"
+                placeholder="Email" />
+        </mat-form-field>
+    
+        <mat-form-field class="field">
+            <input matInput 
+                #password
+                formControlName="password"
+                type="password"
+                placeholder="Senha" />
+            
+            <mat-hint align="end">{{password.value.length > 8 ? '8' : password.value.length}}/8</mat-hint>
+            <mat-error align="start"><strong>A senha deve ter pelo menos um caracter especial, uma letra maiúscula, uma minúscula e um número.</strong> </mat-error>
+        </mat-form-field>
+    
+        <mat-form-field class="field">
+            <input matInput 
+                #passwordRepeat
+                formControlName="passwordRepeat"
+                type="password"
+                placeholder="Repita sua senha" />
+    
+            <mat-hint align="end">{{passwordRepeat.value.length > 8 ? '8' : passwordRepeat.value.length}}/8</mat-hint>
+            <mat-error align="start"><strong>A senha deve ter pelo menos um caracter especial, uma letra maiúscula, uma minúscula e um número.</strong> </mat-error>
+        </mat-form-field>
+    
+        <button mat-raised-button
+            class="submit-button"
+            color="accent"
+            type="submit"
+            [disabled]="!signupForm?.valid">
+            Cadastrar-se
+        </button>
 
-    <mat-form-field class="example-full-width">
-        <input matInput placeholder="Senha" />
-    </mat-form-field>
+        <div class="option">
+            ou <a class="link" routerLink="/welcome/login">fazer login</a>
+        </div>
+    </form>
+</div>
 
-    <mat-form-field class="example-full-width">
-        <input matInput placeholder="Repetir Senha" />
-    </mat-form-field>
-</form>
-
-<button mat-raised-button> 
-    <a routerLink="/welcome/login" routerLinkActive="active">Login</a>
-</button>

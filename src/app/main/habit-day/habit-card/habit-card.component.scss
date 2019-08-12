@@ -1,4 +1,5 @@
 @import 'responsive';
+@import 'colors.scss';
 
 .habit-card {
     display: flex;
@@ -25,6 +26,7 @@
         padding: 0 10px;
         display: flex;
         align-items: center;
+        justify-content: center;
 
         @include for-sm-up {
             padding: 0 20px;
@@ -75,6 +77,10 @@
                 @include for-sm-up {
                     font-size: 20px;
                 }
+
+                & > .done {
+                    color: $habitop-primary;
+                }
             }
         }
     }
@@ -90,3 +96,15 @@
     }
 }
 
+
+.icon {
+    display: block;
+    font-size: 40px;
+    text-align: center;
+    height: auto;
+    width: auto;
+
+    @include for-sm-up {
+        font-size: 60px;
+    }
+}

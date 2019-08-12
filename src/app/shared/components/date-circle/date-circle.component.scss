@@ -1,11 +1,12 @@
 @import 'responsive';
+@import 'colors.scss';
 
 .circle {
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 30px;
-    border: 1px solid black;
+    border: 2px solid black;
     box-shadow: 0 2px 3px 1px lightgray;
     
     & > .link {
@@ -20,7 +21,7 @@
 
         .text {
             display: inline-block;
-            margin: 7px 11px;
+            margin: 5px 9px;
             box-sizing: border-box;
             font-family: monospace;
             font-size: 18px;
@@ -28,6 +29,22 @@
             @include for-sm-up {
                 font-size: 25px;
                 margin: 10px 16px;
+            }
+
+            &.week:not(.today) {
+                font-size: 0;
+
+                &::first-letter {
+                    font-size: 18px;
+
+                    @include for-sm-up {
+                        font-size: 25px;
+                    }
+                }
+
+                @include for-md-up {
+                    font-size: 25px;
+                }
             }
         }
     }
@@ -47,17 +64,23 @@
     opacity: 0.4;
 }
 
-.current-date {
-    box-shadow: 0 0 0 4px yellow;
+.emphasize {
+    box-shadow: 0 0 0 3px $habitop-alternate-primary;
 }
 
 .one-checked {
-    color: green;
-    border-color: green;
+    border-color: $habitop-primary;
+
+    & > .link {
+        color: $habitop-primary;
+    }
 }
 
 .all-checked {
-    border-color: green;
-    background-color: green;
-    color: white;
+    border-color: $habitop-primary;
+    background-color: $habitop-primary;
+
+    & > .link {
+        color: white;
+    }
 }

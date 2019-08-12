@@ -1,17 +1,17 @@
 import { HabitCheck } from './habit-check.model';
 
-export class HabitDate {
+export class HabitDay {
 
-    private date: string;
-    private habitChecks: HabitCheck[];
+    public day: number;
+    public habitChecks: HabitCheck[];
     public isOneChecked: boolean;
     public isAllChecked: boolean;
 
     constructor(
-        date: string,
+        day: number,
         habitChecks: HabitCheck[]
     ) {
-        this.date = date;
+        this.day = day;
         this.habitChecks = [...habitChecks];
         this.isOneChecked = this.oneChecked();
         this.isAllChecked = this.allChecked();

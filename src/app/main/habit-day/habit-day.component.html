@@ -10,6 +10,7 @@
 
         <div class="title-wrapper">
             <div class="title">{{title}}</div>
+            <div class="weekday">{{weekday}}</div>
         </div>
 
         <button mat-button
@@ -25,7 +26,7 @@
         <div class="scroll-container">
             <app-habit-card *ngFor="let habit of filteredHabits"
                 [habit]="habit"
-                [check]="habitDate?.getCheckForHabitWithId(habit?.id)">
+                [check]="habitDay?.getCheckForHabitWithId(habit?.id)">
             </app-habit-card>
         </div>
         
@@ -42,12 +43,15 @@
     
     <div class="bottom">
         <div class="circles">
-            <app-date-circle *ngFor="let date of previousWeekDates"
-                [date]="date"
+            <app-date-circle *ngFor="let previousWeekDate of previousWeekDates"
+                [date]="previousWeekDate"
+                [selectedDate]="date"
+                [isOneChecked]="checkedDateService?.isOneCheckedOnDate(previousWeekDate)"
+                [isAllChecked]="checkedDateService?.isAllCheckedOnDate(previousWeekDate)"
                 format="week">
             </app-date-circle>
 
-            <button mat-icon-button color="accent" 
+            <button mat-icon-button color="primary" 
                 aria-label="Ver calendário" 
                 routerLink="/calendar/{{monthDate}}" 
                 routerLinkActive="active">

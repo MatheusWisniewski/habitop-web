@@ -1,13 +1,15 @@
 <div class="circle" [ngClass]="{
     'month-circle': format === 'month',
     'opaque': opaque,
-    'current-date': isCurrentDate
+    'emphasize': emphasize,
+    'one-checked': isOneChecked && !isAllChecked,
+    'all-checked': isAllChecked
 }">
     <a class="link"
         routerLink="/{{date}}" 
         routerLinkActive="active"> 
 
-        <span class="text">
+        <span class="text {{format}} {{isToday ? 'today' : ''}}">
             {{displayText}}
         </span>
     </a>

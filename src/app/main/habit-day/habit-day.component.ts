@@ -3,11 +3,12 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
 import { Habit } from 'src/app/shared/models/habit.model';
-import { HabitDate } from 'src/app/shared/models/habit-date.model';
 import { HabitCardComponent } from './habit-card/habit-card.component';
 import { DateCircleComponent } from 'src/app/shared/components/date-circle/date-circle.component';
 import { Subscription } from 'rxjs';
 import { HabitService } from 'src/app/shared/services/habit/habit.service';
+import { HabitDay } from 'src/app/shared/models/habit-day.model';
+import { CheckedDateService } from 'src/app/shared/services/checked-date/checked-date.service';
 moment.locale('pt-BR');
 
 @Component({
@@ -31,12 +32,14 @@ export class HabitDayComponent implements OnInit, OnDestroy {
   nextDate: string;
   title: string;
   filteredHabits: Habit[];
-  habitDate: HabitDate;
+  habitDay: HabitDay;
+  weekday: string;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private habitService: HabitService
+    private habitService: HabitService,
+    private checkedDateService: CheckedDateService
   ) {
     this.subscriptions.push(
       this.router.events.subscribe((event) => {
@@ -44,8 +47,8 @@ export class HabitDayComponent implements OnInit, OnDestroy {
           // do some logic again when I click same url
           this.filteredHabits = [];
           this.formatRouterDate();
-          this.mockData();
           this.filterHabits();
+          this.getCurrentDatesChecks();
         }
       })
     );
@@ -56,48 +59,6 @@ export class HabitDayComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
-
-  mockData() {
-
-    this.habitDate = new HabitDate(this.date, [
-      {
-        id: 1,
-        habitId: 1,
-        isChecked: false,
-        streak: 2
-      },
-      {
-        id: 2,
-        habitId: 2,
-        isChecked: false,
-        streak: 0
-      },
-      {
-        id: 3,
-        habitId: 3,
-        isChecked: false,
-        streak: 2
-      },
-      {
-        id: 4,
-        habitId: 4,
-        isChecked: false,
-        streak: 0
-      },
-      {
-        id: 5,
-        habitId: 5,
-        isChecked: false,
-        streak: 2
-      },
-      {
-        id: 6,
-        habitId: 6,
-        isChecked: false,
-        streak: 0
-      }
-    ]);
   }
 
   formatRouterDate() {
@@ -120,11 +81,8 @@ export class HabitDayComponent implements OnInit, OnDestroy {
       this.previousWeekDates.push(moment().subtract(i, 'day').format('DD-MM-YYYY'));
     }
 
-    if (this.momentDate.startOf('day').isSame(moment().startOf('day'))) {
-      this.title = 'Hoje';
-    } else {
-      this.title = this.momentDate.format('D [de] MMMM [de] YYYY');
-    }
+    this.title = this.momentDate.format('D [de] MMMM [de] YYYY');
+    this.weekday = this.momentDate.format('dddd');
   }
 
   filterHabits() {
@@ -133,5 +91,9 @@ export class HabitDayComponent implements OnInit, OnDestroy {
       const shouldBeDisplayedOnThisWeekday = habit.weekdays.includes(this.momentDate.weekday());
       return wasCreatedOnCurrentDateOrBefore && shouldBeDisplayedOnThisWeekday;
     });
+  }
+
+  getCurrentDatesChecks() {
+    this.habitDay = this.checkedDateService.getHabitDayFromMomentDate(this.momentDate);
   }
 }

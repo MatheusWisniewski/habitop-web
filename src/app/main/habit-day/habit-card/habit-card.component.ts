@@ -3,6 +3,7 @@ import { Habit } from 'src/app/shared/models/habit.model';
 import { HabitCheck } from 'src/app/shared/models/habit-check.model';
 import { Router } from '@angular/router';
 import { HabitService } from 'src/app/shared/services/habit/habit.service';
+import { IconService } from 'src/app/shared/services/icon/icon.service';
 
 @Component({
   selector: 'app-habit-card',
@@ -16,7 +17,8 @@ export class HabitCardComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private habitService: HabitService
+    private habitService: HabitService,
+    private iconService: IconService
   ) { }
 
   ngOnInit() {

@@ -1,8 +1,9 @@
-@import 'responsive';
+@import 'colors.scss';
+@import 'responsive.scss';
 
 .header {
     height: 50px;
-    background-color: rgb(99, 207, 99);
+    background-color: $habitop-primary;
     cursor: pointer;
 
     @include for-sm-up {
@@ -26,4 +27,8 @@
             }
         }
     }
+}
+
+.color-white {
+    color: white;
 }

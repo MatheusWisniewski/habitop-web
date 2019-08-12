@@ -1,3 +1,22 @@
-
-<a routerLink="./login" routerLinkActive="active">Login</a>
-<a routerLink="./signup" routerLinkActive="active">Sign up</a>
+<div class="welcome-default">
+    <div class="text">
+        Bem-vindo(a)!
+    </div>
+    <div class="buttons-area">
+        <div class="button-wrapper">
+            <a mat-raised-button 
+                routerLink="./login" 
+                routerLinkActive="active">
+                    Fazer Login
+            </a>
+        </div>
+        <div class="button-wrapper">
+            <a mat-raised-button 
+                color="accent" 
+                routerLink="./signup" 
+                routerLinkActive="active">
+                    Cadastrar-se
+            </a>
+        </div>
+    </div>
+</div>

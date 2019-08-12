@@ -1,13 +1,35 @@
-<p>Login</p>
+<div class="login">
+    <div class="title">Login</div>
 
-<form class="example-form">
-    <mat-form-field class="example-full-width">
-        <input matInput placeholder="Email" />
-    </mat-form-field>
+    <form [formGroup]="loginForm" 
+        (ngSubmit)="onSubmit()" 
+        class="form">
+    
+        <mat-form-field class="field">
+            <input matInput 
+                formControlName="email"
+                placeholder="Email" />
+        </mat-form-field>
+    
+        <mat-form-field class="field">
+            <input matInput 
+                formControlName="password"
+                type="password"
+                placeholder="Senha" />
+        </mat-form-field>
+    
+        <button mat-raised-button
+            class="submit-button"
+            color="accent"
+            type="submit"
+            [disabled]="!loginForm?.valid">
+            Entrar
+        </button>
 
-    <mat-form-field class="example-full-width">
-        <input matInput placeholder="Senha" />
-    </mat-form-field>
-</form>
-
-<a routerLink="" routerLinkActive="active">Entrar</a>
+        <div class="option">
+            ou <a class="link" routerLink="/welcome/signup">cadastrar-se</a>
+        </div>
+    </form>
+</div>
+    
+    

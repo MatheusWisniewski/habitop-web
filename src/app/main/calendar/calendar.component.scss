@@ -20,22 +20,32 @@
         padding: 20px;
     }
 
-    @include for-md-up {
-        padding: 30px;
-    }
-
     @include for-lg-up {
-        padding: 30px 40px;
+        padding: 20px 40px;
     }
 
     & > .title-wrapper {
+        display: flex;
+        flex-direction: column;
+
         & > .title {
             text-align: center;
-            font-size: 25px;
+            font-size: 20px;
             font-weight: bold;
 
             @include for-sm-up {
                 font-size: 30px;
+            }
+        }
+
+        & > .info {
+            text-align: center;
+            font-size: 14px;
+            margin: 5px 0;
+
+            @include for-sm-up {
+                font-size: 18px;
+                margin: 10px 0;
             }
         }
     }
