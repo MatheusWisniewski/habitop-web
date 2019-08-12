@@ -13,6 +13,7 @@ moment.locale('pt-BR');
 export class CheckedDateService {
 
   checkedDatesCache: HabitYear[] = [];
+  lastNavigatedDate: string;
 
   constructor() {
     const mapDays = d => new HabitDay(d.day, d.checks);

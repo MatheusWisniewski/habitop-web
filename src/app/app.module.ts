@@ -22,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './shared/components/header/header.component';
+import { IconComponent } from './shared/components/icon/icon.component';
 
 const materialModules = [
   MatInputModule,
@@ -46,7 +47,8 @@ const materialModules = [
     EditHabitComponent,
     HabitCardComponent,
     DateCircleComponent,
-    HeaderComponent
+    HeaderComponent,
+    IconComponent
   ],
   imports: [
     BrowserModule,

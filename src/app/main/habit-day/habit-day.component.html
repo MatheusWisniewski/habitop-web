@@ -1,11 +1,12 @@
 <div class="habit-day">
     <div class="header">
         <button mat-button
+            class="icon"
             color="basic"
             routerLink="/{{previousDate}}" 
             routerLinkActive="active">
             
-            <mat-icon>keyboard_arrow_left</mat-icon>
+            <app-icon>keyboard_arrow_left</app-icon>
         </button>
 
         <div class="title-wrapper">
@@ -14,11 +15,12 @@
         </div>
 
         <button mat-button
+            class="icon"
             color="basic"
             routerLink="/{{nextDate}}" 
             routerLinkActive="active">
             
-            <mat-icon>keyboard_arrow_right</mat-icon>
+            <app-icon>keyboard_arrow_right</app-icon>
         </button>
     </div>
 
@@ -51,12 +53,13 @@
                 format="week">
             </app-date-circle>
 
-            <button mat-icon-button color="primary" 
+            <button mat-icon-button 
                 aria-label="Ver calendário" 
                 routerLink="/calendar/{{monthDate}}" 
-                routerLinkActive="active">
+                routerLinkActive="active"
+                title="Ir para o calendário">
                 
-                <mat-icon>arrow_back</mat-icon>
+                <app-icon>arrow_back</app-icon>
             </button>
         </div>
     </div>

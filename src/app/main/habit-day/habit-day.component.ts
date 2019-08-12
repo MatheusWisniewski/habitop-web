@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { HabitService } from 'src/app/shared/services/habit/habit.service';
 import { HabitDay } from 'src/app/shared/models/habit-day.model';
 import { CheckedDateService } from 'src/app/shared/services/checked-date/checked-date.service';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 moment.locale('pt-BR');
 
 @Component({
@@ -17,7 +18,8 @@ moment.locale('pt-BR');
   styleUrls: ['./habit-day.component.scss'],
   providers: [
     HabitCardComponent,
-    DateCircleComponent
+    DateCircleComponent,
+    IconComponent
   ]
 })
 export class HabitDayComponent implements OnInit, OnDestroy {
@@ -72,6 +74,7 @@ export class HabitDayComponent implements OnInit, OnDestroy {
 
     this.momentDate = moment(this.date, 'DD-MM-YYYY');
     this.date = this.momentDate.format('DD-MM-YYYY');
+    this.checkedDateService.lastNavigatedDate = this.date;
     this.monthDate = this.momentDate.format('MM-YYYY');
     this.previousWeekDates = [];
     this.previousDate = this.momentDate.clone().subtract(1, 'day').format('DD-MM-YYYY');
@@ -81,8 +84,10 @@ export class HabitDayComponent implements OnInit, OnDestroy {
       this.previousWeekDates.push(moment().subtract(i, 'day').format('DD-MM-YYYY'));
     }
 
-    this.title = this.momentDate.format('D [de] MMMM [de] YYYY');
-    this.weekday = this.momentDate.format('dddd');
+    this.title = this.momentDate.year() === moment().year()
+      ? this.momentDate.format('D [de] MMMM')
+      : this.momentDate.format('D [de] MMMM [de] YYYY');
+    this.weekday = this.momentDate.format('dddd') + (this.momentDate.startOf('day').isSame(moment().startOf('day')) ? ' (Hoje)' : '');
   }
 
   filterHabits() {

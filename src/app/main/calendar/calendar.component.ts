@@ -5,6 +5,7 @@ import 'moment/locale/pt-br';
 import { Subscription } from 'rxjs';
 import { DateCircleComponent } from 'src/app/shared/components/date-circle/date-circle.component';
 import { CheckedDateService } from 'src/app/shared/services/checked-date/checked-date.service';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 moment.locale('pt-BR');
 
 @Component({
@@ -12,7 +13,8 @@ moment.locale('pt-BR');
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
   providers: [
-    DateCircleComponent
+    DateCircleComponent,
+    IconComponent
   ]
 })
 export class CalendarComponent implements OnInit, OnDestroy {

@@ -4,11 +4,15 @@ import { HabitCheck } from 'src/app/shared/models/habit-check.model';
 import { Router } from '@angular/router';
 import { HabitService } from 'src/app/shared/services/habit/habit.service';
 import { IconService } from 'src/app/shared/services/icon/icon.service';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-habit-card',
   templateUrl: './habit-card.component.html',
-  styleUrls: ['./habit-card.component.scss']
+  styleUrls: ['./habit-card.component.scss'],
+  providers: [
+    IconComponent
+  ]
 })
 export class HabitCardComponent implements OnInit {
 

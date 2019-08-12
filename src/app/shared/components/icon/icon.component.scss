@@ -1,0 +1,37 @@
+@import 'responsive';
+
+.sm * {
+    display: block;
+    font-size: 20px;
+    text-align: center;
+    height: auto;
+    width: auto;
+
+    @include for-sm-up {
+        font-size: 30px;
+    }
+}
+
+.md * {
+    display: block;
+    font-size: 30px;
+    text-align: center;
+    height: auto;
+    width: auto;
+
+    @include for-sm-up {
+        font-size: 40px;
+    }
+}
+
+.lg * {
+    display: block;
+    font-size: 40px;
+    text-align: center;
+    height: auto;
+    width: auto;
+
+    @include for-sm-up {
+        font-size: 60px;
+    }
+}

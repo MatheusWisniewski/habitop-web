@@ -120,5 +120,17 @@
         flex-direction: row-reverse;
         align-items: center;
         justify-content: space-between;
+
+        
+    }
+}
+
+.icon * {
+    font-size: 30px;
+    width: auto;
+    height: auto;
+
+    @include for-sm-up {
+        font-size: 40px;
     }
 }

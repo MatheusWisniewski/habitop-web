@@ -1,11 +1,11 @@
 <div class="calendar">
     <div class="header">
         <button mat-button
-            color="basic"
+            class="icon"
             routerLink="/calendar/{{previousMonthDate}}" 
             routerLinkActive="active">
             
-            <mat-icon>keyboard_arrow_left</mat-icon>
+            <app-icon>keyboard_arrow_left</app-icon>
         </button>
 
         <div class="title-wrapper">
@@ -16,11 +16,11 @@
         </div>
 
         <button mat-button
-            color="basic"
+            class="icon"
             routerLink="/calendar/{{nextMonthDate}}" 
             routerLinkActive="active">
             
-            <mat-icon>keyboard_arrow_right</mat-icon>
+            <app-icon>keyboard_arrow_right</app-icon>
         </button>
     </div>
     

@@ -41,6 +41,10 @@ export class IconService {
         class: 'alternate-theme',
         color: 'warn'
       };
+      case 'gray': return {
+        class: 'gray-theme',
+        color: 'warn'
+      };
       default: return {
         class: '',
         color: ''

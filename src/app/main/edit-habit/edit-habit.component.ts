@@ -5,6 +5,7 @@ import { HabitService } from 'src/app/shared/services/habit/habit.service';
 import { Habit } from 'src/app/shared/models/habit.model';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
+import { CheckedDateService } from 'src/app/shared/services/checked-date/checked-date.service';
 moment.locale('pt-BR');
 
 @Component({
@@ -23,6 +24,7 @@ export class EditHabitComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private habitService: HabitService,
+    private checkedDateService: CheckedDateService,
     private router: Router
   ) {
     this.isNew = this.route.snapshot.data.isNew;
@@ -31,7 +33,7 @@ export class EditHabitComponent implements OnInit {
       this.habit = {
         name: '',
         icon: 'star',
-        color: 'primary',
+        color: 'blue',
         weekdays: [0, 1, 2, 3, 4, 5, 6],
         creationDate: moment().format('DD-MM-YYYY')
       };

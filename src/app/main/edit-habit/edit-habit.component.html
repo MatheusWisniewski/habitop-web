@@ -1,57 +1,108 @@
-<form class="habit-form" 
-    [formGroup]="habitForm" 
-    (ngSubmit)="onSubmit()">
-
-    <div class="header">
-        <button mat-button
-            color="basic"
-            routerLink="/{previousDate}}" 
-            routerLinkActive="active">
-            
-            Voltar
-        </button>
-
-        <div class="title-wrapper">
-            <div class="title">{{title}}</div>
+<div class="edit-habit">
+    <form class="form" 
+        [formGroup]="habitForm" 
+        (ngSubmit)="onSubmit()">
+    
+        <div class="header">
+            <button mat-button
+                class="side-button"
+                color="accent"
+                routerLink="/{{checkedDateService?.lastNavigatedDate}}" 
+                routerLinkActive="active">
+                
+                Voltar
+            </button>
+    
+            <div class="title-wrapper">
+                <div class="title">{{title}}</div>
+            </div>
+    
+            <button mat-button
+                class="side-button"
+                type="submit"
+                color="accent"
+                [disabled]="!habitForm?.valid"
+                (click)="onClickedSave()">
+                
+                Salvar
+            </button>
+        </div>
+    
+        <div class="name-row">
+            <mat-form-field class="name-wrapper field">
+                <input matInput 
+                    formControlName="name"
+                    placeholder="Nome" />
+            </mat-form-field>
+        </div>
+    
+        <div class="icon-color-row">
+    
+            <div class="icon-text-wrapper">
+                <div class="icon-wrapper">
+                    <app-icon size="lg" [color]="habit?.color">{{habit?.icon}}</app-icon>
+                </div>
+                <div class="text">Ícone</div>
+            </div>
+        
+            <div class="icon-text-wrapper">
+                <div class="icon-wrapper">
+                    <app-icon size="lg" [color]="habit?.color">fiber_manual_record</app-icon>
+                </div>
+                <div class="text">Cor</div>
+            </div>
         </div>
 
-        <button mat-button
-            type="submit"
-            color="basic"
-            [disabled]="!habitForm?.valid"
-            (click)="onClickedSave()">
-            
-            Salvar
-        </button>
-    </div>
+        <div class="frequency-section">
 
-    <div class="name-row">
-        <mat-form-field class="name-wrapper">
-            <input matInput 
-                formControlName="name"
-                placeholder="Nome" />
-        </mat-form-field>
-    </div>
+            <div class="title-wrapper">
+                <hr>
+                <div class="text">
+                    quero fazer nesses dias:
+                </div>
+                <hr>
+            </div>
 
-    <div class="icon-color-row">
+            <div class="weekdays-row">
+                <button mat-fab>
+                    Dom
+                </button>
 
-        <mat-form-field class="name-wrapper">
-            <input matInput 
-                formControlName="icon"
-                placeholder="Ícone" />
-        </mat-form-field>
+                <button mat-fab>
+                    Seg
+                </button>
+
+                <button mat-fab>
+                    Ter
+                </button>
+
+                <button mat-fab>
+                    Qua
+                </button>
+
+                <button mat-fab>
+                    Qui
+                </button>
+
+                <button mat-fab>
+                    Sex
+                </button>
+
+                <button mat-fab>
+                    Sáb
+                </button>
+            </div>
+
+            <div class="everyday-wrapper">
+                <button mat-raised-button
+                    class="everyday-button">
+                    Todos os dias
+                </button>
+            </div>
+        </div>
     
-        <mat-form-field class="name-wrapper">
-            <input matInput 
-                formControlName="color"
-                placeholder="Cor" />
-        </mat-form-field>
-    </div>
-
-
+        <div class="modal">
     
-
-    <div class="modal">
-
-    </div>
-</form>
+        </div>
+    </form>
+</div>
