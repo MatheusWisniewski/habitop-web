@@ -10,9 +10,9 @@
 
         <div class="title-wrapper">
             <div class="title">{{title}}</div>
-            <div class="info" *ngIf="numberOfPerfectDays === 0">Nenhum dia perfeito</div>
-            <div class="info" *ngIf="numberOfPerfectDays === 1">1 dia perfeito</div>
-            <div class="info" *ngIf="numberOfPerfectDays > 1">{{numberOfPerfectDays}} dias perfeitos!</div>
+            <div class="info" *ngIf="(habitMonth$ | async)?.getNumberOfPerfectDays() === 0">Nenhum dia perfeito</div>
+            <div class="info" *ngIf="(habitMonth$ | async)?.getNumberOfPerfectDays() === 1">1 dia perfeito</div>
+            <div class="info" *ngIf="(habitMonth$ | async)?.getNumberOfPerfectDays() > 1">{{(habitMonth$ | async)?.getNumberOfPerfectDays() || 0}} dias perfeitos!</div>
         </div>
 
         <button mat-button
@@ -38,8 +38,8 @@
                 <app-date-circle *ngFor="let date of week"
                     [date]="date"
                     [opaque]="notThisMonth(date)"
-                    [isOneChecked]="checkedDateService?.isOneCheckedOnDate(date)"
-                    [isAllChecked]="checkedDateService?.isAllCheckedOnDate(date)">
+                    [isOneChecked]="(habitMonth$ | async)?.getDate(date)?.isOneChecked"
+                    [isAllChecked]="(habitMonth$ | async)?.getDate(date)?.isAllChecked">
                 </app-date-circle>
             </div>
         </div>

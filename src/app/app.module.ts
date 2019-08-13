@@ -23,6 +23,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { IconComponent } from './shared/components/icon/icon.component';
+import { WeekdayCircleComponent } from './main/edit-habit/weekday-circle/weekday-circle.component';
+import { IconPickerModalComponent } from './main/edit-habit/icon-picker-modal/icon-picker-modal.component';
 
 const materialModules = [
   MatInputModule,
@@ -48,7 +50,9 @@ const materialModules = [
     HabitCardComponent,
     DateCircleComponent,
     HeaderComponent,
-    IconComponent
+    IconComponent,
+    WeekdayCircleComponent,
+    IconPickerModalComponent
   ],
   imports: [
     BrowserModule,

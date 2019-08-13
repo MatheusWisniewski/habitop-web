@@ -5,7 +5,7 @@ import 'moment/locale/pt-br';
 import { Habit } from 'src/app/shared/models/habit.model';
 import { HabitCardComponent } from './habit-card/habit-card.component';
 import { DateCircleComponent } from 'src/app/shared/components/date-circle/date-circle.component';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { HabitService } from 'src/app/shared/services/habit/habit.service';
 import { HabitDay } from 'src/app/shared/models/habit-day.model';
 import { CheckedDateService } from 'src/app/shared/services/checked-date/checked-date.service';
@@ -34,7 +34,7 @@ export class HabitDayComponent implements OnInit, OnDestroy {
   nextDate: string;
   title: string;
   filteredHabits: Habit[];
-  habitDay: HabitDay;
+  habitDay$: Observable<HabitDay>;
   weekday: string;
 
   constructor(
@@ -99,6 +99,14 @@ export class HabitDayComponent implements OnInit, OnDestroy {
   }
 
   getCurrentDatesChecks() {
-    this.habitDay = this.checkedDateService.getHabitDayFromMomentDate(this.momentDate);
+    this.habitDay$ = this.checkedDateService.getHabitDayWithMoment(this.momentDate);
+  }
+
+  onClickedCheck(checkId: number, habitId: number) {
+    if (checkId) {
+      this.checkedDateService.update(checkId);
+    } else {
+      this.checkedDateService.create(habitId, this.momentDate.format('DD-MM-YYYY'));
+    }
   }
 }

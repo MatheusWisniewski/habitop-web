@@ -1,4 +1,10 @@
-import { HabitDay } from './habit-day.model';
+import { HabitDay, IHabitDay } from './habit-day.model';
+import * as moment from 'moment';
+
+export class IHabitMonth {
+    month: number;
+    days: IHabitDay[];
+}
 
 export class HabitMonth {
     month: number;
@@ -14,6 +20,10 @@ export class HabitMonth {
 
     getDay(day: number) {
         return this.days && this.days.find(d => d.day === day);
+    }
+
+    getDate(date: string) {
+        return this.getDay(moment(date, 'DD-MM-YYYY').date());
     }
 
     getNumberOfPerfectDays(): number {

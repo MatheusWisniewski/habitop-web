@@ -1,4 +1,9 @@
-import { HabitMonth } from './habit-month.model';
+import { HabitMonth, IHabitMonth } from './habit-month.model';
+
+export class IHabitYear {
+    year: number;
+    months: IHabitMonth[];
+}
 
 export class HabitYear {
     year: number;

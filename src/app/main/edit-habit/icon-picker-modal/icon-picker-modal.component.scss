@@ -1,0 +1,59 @@
+@import 'responsive';
+@import 'colors.scss';
+
+.background {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba($habitop-gray, 0.5);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > .modal {
+        z-index: 101;
+        width: 90%;
+        height: 90%;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 0 5px $habitop-gray;
+        max-width: 500px;
+        max-height: 700px;
+        overflow-y: auto;
+
+        &.colors {
+            max-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            @include for-sm-up {
+                max-height: 300px;
+            }
+        }
+    }
+}
+
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    min-height: 0;
+}
+
+.icon {
+    width: 33%;
+    padding: 20px 0;
+    cursor: pointer;
+
+    @include for-sm-up {
+        padding: 40px 0;
+    }
+
+    @include for-lg-up {
+        padding: 50px 0;
+    }
+}

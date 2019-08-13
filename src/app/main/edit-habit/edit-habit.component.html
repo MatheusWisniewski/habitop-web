@@ -1,5 +1,6 @@
 <div class="edit-habit">
-    <form class="form" 
+    <form #form
+        class="form" 
         [formGroup]="habitForm" 
         (ngSubmit)="onSubmit()">
     
@@ -30,24 +31,28 @@
     
         <div class="name-row">
             <mat-form-field class="name-wrapper field">
-                <input matInput 
+                <input #name
+                    matInput 
                     formControlName="name"
                     placeholder="Nome" />
+                <mat-error *ngIf="name?.value?.length > 0">Já existe um hábito com esse nome</mat-error>
             </mat-form-field>
         </div>
     
         <div class="icon-color-row">
     
             <div class="icon-text-wrapper">
-                <div class="icon-wrapper">
+                <div class="icon-wrapper"
+                    (click)="onClickedIcon()">
                     <app-icon size="lg" [color]="habit?.color">{{habit?.icon}}</app-icon>
                 </div>
                 <div class="text">Ícone</div>
             </div>
         
             <div class="icon-text-wrapper">
-                <div class="icon-wrapper">
-                    <app-icon size="lg" [color]="habit?.color">fiber_manual_record</app-icon>
+                <div class="icon-wrapper"
+                    (click)="onClickedColor()">
+                    <app-icon size="lg" [color]="habit?.color">lens</app-icon>
                 </div>
                 <div class="text">Cor</div>
             </div>
@@ -64,45 +69,43 @@
             </div>
 
             <div class="weekdays-row">
-                <button mat-fab>
-                    Dom
-                </button>
-
-                <button mat-fab>
-                    Seg
-                </button>
-
-                <button mat-fab>
-                    Ter
-                </button>
-
-                <button mat-fab>
-                    Qua
-                </button>
-
-                <button mat-fab>
-                    Qui
-                </button>
-
-                <button mat-fab>
-                    Sex
-                </button>
-
-                <button mat-fab>
-                    Sáb
-                </button>
+                <app-weekday-circle *ngFor="let weekdayNumber of weekdays"
+                    [weekdayNumber]="weekdayNumber"
+                    [color]="habit?.color"
+                    [selected]="habit?.weekdays?.includes(weekdayNumber) && habit?.weekdays?.length < 7"
+                    (clickedWeekday)="onClickedWeekday(weekdayNumber)">
+                </app-weekday-circle>
             </div>
 
-            <div class="everyday-wrapper">
+            <div class="everyday-wrapper {{habit?.weekdays?.length === 7 ? iconService?.getClass(habit?.color) : ''}}">
                 <button mat-raised-button
-                    class="everyday-button">
+                    class="everyday-button"
+                    [color]="habit?.weekdays?.length === 7 ? iconService?.getMatColor(habit?.color) : ''"
+                    (click)="onClickedEveryDayButton()">
                     Todos os dias
                 </button>
             </div>
         </div>
-    
-        <div class="modal">
-    
-        </div>
+
+        <button *ngIf="!isNew"
+            mat-raised-button
+            class="delete-button"
+            (click)="onClickedDelete()">
+            <mat-icon>delete</mat-icon>
+            <span class="text">Deletar</span> 
+        </button>
     </form>
 </div>
+
+<app-icon-picker-modal *ngIf="showIconPickerModal"
+    type="icons"
+    [color]="habit?.color"
+    (clickedIcon)="onSelectedIcon($event)"
+    (closeModal)="onClickedCloseModal()">
+</app-icon-picker-modal>
+
+<app-icon-picker-modal *ngIf="showColorPickerModal"
+    type="colors"
+    (clickedColor)="onSelectedColor($event)"
+    (closeModal)="onClickedCloseModal()">
+</app-icon-picker-modal>

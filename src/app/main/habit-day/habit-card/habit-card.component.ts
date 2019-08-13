@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Habit } from 'src/app/shared/models/habit.model';
 import { HabitCheck } from 'src/app/shared/models/habit-check.model';
 import { Router } from '@angular/router';
@@ -18,6 +18,8 @@ export class HabitCardComponent implements OnInit {
 
   @Input() habit: Habit;
   @Input() check: HabitCheck;
+
+  @Output() clickedCheck = new EventEmitter<number>();
 
   constructor(
     private router: Router,
@@ -39,6 +41,6 @@ export class HabitCardComponent implements OnInit {
   }
 
   onClickedCheck() {
-    this.check.isChecked = !this.check.isChecked;
+    this.clickedCheck.next(this.check && this.check.id);
   }
 }

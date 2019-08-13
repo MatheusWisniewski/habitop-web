@@ -2,10 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { DateCircleComponent } from 'src/app/shared/components/date-circle/date-circle.component';
 import { CheckedDateService } from 'src/app/shared/services/checked-date/checked-date.service';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
+import { HabitMonth } from 'src/app/shared/models/habit-month.model';
 moment.locale('pt-BR');
 
 @Component({
@@ -27,7 +28,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   nextMonthDate: string;
   title: string;
   weekdays: string[] = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-  numberOfPerfectDays: number;
+  habitMonth$: Observable<HabitMonth>;
 
   datesMatrix: string[][] = [];
 
@@ -42,7 +43,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
           // do some logic again when I click same url
           this.formatRouterDate();
           this.buildDatesMatrix();
-          this.getNumberOfPerfectDays();
+          this.habitMonth$ = this.checkedDateService.getHabitMonthWithMoment(this.momentDate);
         }
       })
     );
@@ -92,9 +93,5 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   notThisMonth(date: string): boolean {
     return moment(date, 'DD-MM-YYYY').month() !== this.momentDate.month();
-  }
-
-  getNumberOfPerfectDays() {
-    this.numberOfPerfectDays = this.checkedDateService.getNumberOfPerfectDaysOnMonth(this.momentDate);
   }
 }

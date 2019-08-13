@@ -28,7 +28,8 @@
         <div class="scroll-container">
             <app-habit-card *ngFor="let habit of filteredHabits"
                 [habit]="habit"
-                [check]="habitDay?.getCheckForHabitWithId(habit?.id)">
+                [check]="(habitDay$ | async)?.getCheckForHabitWithId(habit?.id)"
+                (clickedCheck)="onClickedCheck($event, habit?.id)">
             </app-habit-card>
         </div>
         
@@ -48,8 +49,8 @@
             <app-date-circle *ngFor="let previousWeekDate of previousWeekDates"
                 [date]="previousWeekDate"
                 [selectedDate]="date"
-                [isOneChecked]="checkedDateService?.isOneCheckedOnDate(previousWeekDate)"
-                [isAllChecked]="checkedDateService?.isAllCheckedOnDate(previousWeekDate)"
+                [isOneChecked]="(checkedDateService?.getHabitDay(previousWeekDate) | async)?.isOneChecked"
+                [isAllChecked]="(checkedDateService?.getHabitDay(previousWeekDate) | async)?.isAllChecked"
                 format="week">
             </app-date-circle>
 

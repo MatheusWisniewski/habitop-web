@@ -1,6 +1,8 @@
+import { IHabitYear } from '../../models/habit-year.model';
+
 const exampleNoneDay = {
     day: 1,
-    checks: [
+    habitChecks: [
         {
             id: 1,
             habitId: 1,
@@ -42,7 +44,7 @@ const exampleNoneDay = {
 
 const exampleAtLeastOneDay = {
     day: 1,
-    checks: [
+    habitChecks: [
         {
             id: 1,
             habitId: 1,
@@ -84,7 +86,7 @@ const exampleAtLeastOneDay = {
 
 const examplePerfectDay = {
     day: 1,
-    checks: [
+    habitChecks: [
         {
             id: 1,
             habitId: 1,
@@ -95,7 +97,7 @@ const examplePerfectDay = {
             id: 2,
             habitId: 2,
             isChecked: true,
-            streak: 0
+            streak: 1
         },
         {
             id: 3,
@@ -107,7 +109,7 @@ const examplePerfectDay = {
             id: 4,
             habitId: 4,
             isChecked: true,
-            streak: 0
+            streak: 1
         },
         {
             id: 5,
@@ -119,35 +121,33 @@ const examplePerfectDay = {
             id: 6,
             habitId: 6,
             isChecked: true,
-            streak: 0
+            streak: 5
         }
     ]
 };
 
-export const response = [
-    {
-        year: 2019,
-        months: [
-            {
-                month: 8,
-                days: [
-                    {...exampleNoneDay, day: 1},
-                    {...exampleAtLeastOneDay, day: 2},
-                    {...examplePerfectDay, day: 3},
-                    {...examplePerfectDay, day: 4},
-                    {...examplePerfectDay, day: 5},
-                    {...exampleAtLeastOneDay, day: 6},
-                    {...exampleAtLeastOneDay, day: 7},
-                    {...exampleAtLeastOneDay, day: 8},
-                    {...examplePerfectDay, day: 9},
-                    {...examplePerfectDay, day: 10},
-                    {...examplePerfectDay, day: 11},
-                    {...exampleNoneDay, day: 12},
-                    {...exampleNoneDay, day: 13},
-                    {...exampleNoneDay, day: 14},
-                ]
-            }
-        ]
-    }
-];
+export const mockResponseFromServer: IHabitYear = {
+    year: 2019,
+    months: [
+        {
+            month: 8,
+            days: [
+                {...exampleNoneDay, day: 1},
+                {...exampleAtLeastOneDay, day: 2},
+                {...examplePerfectDay, day: 3},
+                {...examplePerfectDay, day: 4},
+                {...examplePerfectDay, day: 5},
+                {...exampleAtLeastOneDay, day: 6},
+                {...exampleAtLeastOneDay, day: 7},
+                {...exampleAtLeastOneDay, day: 8},
+                {...examplePerfectDay, day: 9},
+                {...examplePerfectDay, day: 10},
+                {...examplePerfectDay, day: 11},
+                {...exampleNoneDay, day: 12},
+                {...exampleNoneDay, day: 13},
+                {...exampleNoneDay, day: 14},
+            ]
+        }
+    ]
+};
 

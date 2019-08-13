@@ -1,0 +1,8 @@
+<div class="wrapper {{selected ? iconService?.getClass(color) : ''}}">
+    <button mat-fab
+        [color]="selected ? iconService?.getMatColor(color) : ''"
+        (click)="onClickedWeekday()">
+        {{weekdayNumber2name(weekdayNumber)}}
+    </button>
+</div>
+

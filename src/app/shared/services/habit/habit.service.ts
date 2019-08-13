@@ -29,8 +29,8 @@ export class HabitService {
   }
 
   getHabitWithFormattedName(formattedName: string) {
-    return this.habits.find(habit => {
+    return {...this.habits.find(habit => {
       return this.formatHabitName(habit.name) === formattedName;
-    });
+    })};
   }
 }

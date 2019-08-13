@@ -25,11 +25,11 @@
 
             <div class="text">
                 <span *ngIf="check?.streak > 0" [ngClass]="{'done': check?.isChecked}">
-                    {{check?.streak}} em seguida<span *ngIf="check?.isChecked">! FEITO!</span><span *ngIf="!check?.isChecked">. Faça hoje!</span>
+                    {{check?.streak}} em seguida<span *ngIf="check?.isChecked">! FEITO!</span><span *ngIf="!check?.isChecked">. Continue!</span>
                 </span>
     
                 <span *ngIf="!check?.streak || check?.streak === 0">
-                    Comece a sequência hoje!
+                    Comece a sequência!
                 </span>
             </div>
         </div>

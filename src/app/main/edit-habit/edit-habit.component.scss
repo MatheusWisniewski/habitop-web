@@ -8,6 +8,7 @@
     justify-content: flex-start;
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 .form {
@@ -15,6 +16,8 @@
     flex-direction: column;
     align-items: stretch;
     width: 100%;
+    min-height: 0;
+    overflow-y: auto;
 
     & > .header {
         flex: 0 1 auto;
@@ -181,5 +184,23 @@
                 font-size: 22px;
             }
         }
+    }
+}
+
+.delete-button {
+    width: 100px;
+    height: 40px;
+    align-self: flex-end;
+    margin: 30px 5px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include for-sm-up {
+        margin: 40px 20px;
+        font-size: 22px;
+        width: 200px;
+        height: 80px;
     }
 }

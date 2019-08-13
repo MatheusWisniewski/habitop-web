@@ -56,11 +56,11 @@
 
 .option {
   margin-top: 10px;
-  font-size: 12px;
+  font-size: 18px;
 
   @include for-sm-up {
-    margin-top: 20px;
-    font-size: 20px;
+    margin-top: 22px;
+    font-size: 22px;
   }
 
   & > .link {

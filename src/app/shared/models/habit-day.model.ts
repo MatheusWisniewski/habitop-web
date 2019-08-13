@@ -1,5 +1,10 @@
 import { HabitCheck } from './habit-check.model';
 
+export interface IHabitDay {
+    day: number;
+    habitChecks: HabitCheck[];
+}
+
 export class HabitDay {
 
     public day: number;

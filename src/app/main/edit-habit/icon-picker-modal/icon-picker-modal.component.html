@@ -1,0 +1,30 @@
+
+<div class="background"
+    (click)="onClickedClose()">
+
+    <div class="modal {{type}}">
+        <div *ngIf="type === 'icons'" 
+            class="wrapper">
+
+            <app-icon *ngFor="let icon of iconOptions"
+                [color]="color"
+                size="lg"
+                class="icon"
+                (click)="onClickedIcon(icon)">
+                {{icon}}
+            </app-icon>
+        </div>
+    
+        <div *ngIf="type === 'colors'" 
+            class="wrapper">
+
+            <app-icon *ngFor="let color of colorOptions"
+                [color]="color"
+                size="lg"
+                class="icon"
+                (click)="onClickedColor(color)">
+                lens
+            </app-icon>
+        </div>
+    </div>
+</div>
