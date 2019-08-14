@@ -25,6 +25,8 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { IconComponent } from './shared/components/icon/icon.component';
 import { WeekdayCircleComponent } from './main/edit-habit/weekday-circle/weekday-circle.component';
 import { IconPickerModalComponent } from './main/edit-habit/icon-picker-modal/icon-picker-modal.component';
+import { TransitionGroupComponent } from './shared/components/transition-group/transition-group.component';
+import { TransitionGroupItemDirective } from './shared/directives/transition-group-item/transition-group-item.directive';
 
 const materialModules = [
   MatInputModule,
@@ -52,7 +54,9 @@ const materialModules = [
     HeaderComponent,
     IconComponent,
     WeekdayCircleComponent,
-    IconPickerModalComponent
+    IconPickerModalComponent,
+    TransitionGroupComponent,
+    TransitionGroupItemDirective
   ],
   imports: [
     BrowserModule,

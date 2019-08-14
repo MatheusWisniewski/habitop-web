@@ -1,10 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Habit } from 'src/app/shared/models/habit.model';
-import { HabitCheck } from 'src/app/shared/models/habit-check.model';
 import { Router } from '@angular/router';
 import { HabitService } from 'src/app/shared/services/habit/habit.service';
 import { IconService } from 'src/app/shared/services/icon/icon.service';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
+import { HabitWithDayInfo } from 'src/app/shared/models/habit-with-day-info';
 
 @Component({
   selector: 'app-habit-card',
@@ -16,10 +15,9 @@ import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 })
 export class HabitCardComponent implements OnInit {
 
-  @Input() habit: Habit;
-  @Input() check: HabitCheck;
+  @Input() habitWithDayInfo: HabitWithDayInfo;
 
-  @Output() clickedCheck = new EventEmitter<number>();
+  @Output() clickedCheck = new EventEmitter<void>();
 
   constructor(
     private router: Router,
@@ -31,16 +29,10 @@ export class HabitCardComponent implements OnInit {
   }
 
   onClickedEditItem() {
-    const normalize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    const lowerCase = (str: string) => str.toLowerCase();
-    const replaceStringsWithDash = (str: string) => str.replace(/\s/g, '-');
-
-    const formattedHabitName = replaceStringsWithDash(lowerCase(normalize(this.habit.name)));
-
-    this.router.navigateByUrl(`/edit/${formattedHabitName}`);
+    this.router.navigateByUrl(`/edit/${this.habitService.formatHabitName(this.habitWithDayInfo.name)}`);
   }
 
   onClickedCheck() {
-    this.clickedCheck.next(this.check && this.check.id);
+    this.clickedCheck.next();
   }
 }

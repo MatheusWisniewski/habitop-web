@@ -4,8 +4,8 @@
         title="Clique para editar">
 
         <app-icon size="lg" 
-            [color]="check?.isChecked ? 'gray' : habit?.color">
-            {{habit?.icon}}
+            [color]="habitWithDayInfo?.isChecked ? 'gray' : habitWithDayInfo?.color">
+            {{habitWithDayInfo?.icon}}
         </app-icon>
     </div>
 
@@ -14,21 +14,21 @@
         title="Clique para editar">
         
         <div class="top">
-            <span class="title" [ngClass]="{'title-checked': check?.isChecked}">{{habit?.name}}</span>
+            <span class="title" [ngClass]="{'title-checked': habitWithDayInfo?.isChecked}">{{habitWithDayInfo?.name}}</span>
         </div>
 
         <div class="bottom">
             <app-icon size="sm"
-                [color]="check?.isChecked ? 'green' : habit?.color">
-                {{check?.isChecked ? 'check_box' : 'play_arrow'}}
+                [color]="habitWithDayInfo?.isChecked ? 'green' : habitWithDayInfo?.color">
+                {{habitWithDayInfo?.isChecked ? 'check_box' : 'play_arrow'}}
             </app-icon>
 
             <div class="text">
-                <span *ngIf="check?.streak > 0" [ngClass]="{'done': check?.isChecked}">
-                    {{check?.streak}} em seguida<span *ngIf="check?.isChecked">! FEITO!</span><span *ngIf="!check?.isChecked">. Continue!</span>
+                <span *ngIf="habitWithDayInfo?.streak > 0" [ngClass]="{'done': habitWithDayInfo?.isChecked}">
+                    {{habitWithDayInfo?.streak}} em seguida<span *ngIf="habitWithDayInfo?.isChecked">! FEITO!</span><span *ngIf="!habitWithDayInfo?.isChecked">. Continue!</span>
                 </span>
     
-                <span *ngIf="!check?.streak || check?.streak === 0">
+                <span *ngIf="!habitWithDayInfo?.streak || habitWithDayInfo?.streak === 0">
                     Comece a sequência!
                 </span>
             </div>
@@ -39,8 +39,8 @@
         (click)="onClickedCheck()"
         title="Clique para marcar como feito">
         <app-icon size="lg" 
-            [color]="check?.isChecked ? 'green' : 'black'">
-            {{check?.isChecked ? 'check_box' : 'check_box_outline_blank'}}
+            [color]="habitWithDayInfo?.isChecked ? 'green' : 'black'">
+            {{habitWithDayInfo?.isChecked ? 'check_box' : 'check_box_outline_blank'}}
         </app-icon>
     </div>
 </div>

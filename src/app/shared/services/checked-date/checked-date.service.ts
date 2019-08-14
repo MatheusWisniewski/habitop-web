@@ -6,9 +6,8 @@ import { mockResponseFromServer } from './response.mock';
 import { HabitDay } from '../../models/habit-day.model';
 import { HabitMonth } from '../../models/habit-month.model';
 import { HttpClient } from '@angular/common/http';
-import { HabitCheck } from '../../models/habit-check.model';
-import { of, Observable, BehaviorSubject } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 moment.locale('pt-BR');
 
 @Injectable({
@@ -20,28 +19,108 @@ export class CheckedDateService {
   checkedDatesCache$ = new BehaviorSubject<HabitYear[]>([]);
   lastNavigatedDate: string;
 
+  counter = 100;
+
   constructor(
     private httpClient: HttpClient
   ) {
   }
 
   create(habitId: number, date: string) {
-    this.httpClient.post<HabitCheck>('checks', {
-      habitId,
-      date
-    }).subscribe(resp => {
+    // this.httpClient.post<IHabitYear>('checks', {
+    //   habitId,
+    //   date
+    // }).subscribe(resp => {
+    //      this.cache(resp)
+    // });
 
-    });
+    const momentDate = moment(date, 'DD-MM-YYYY');
+    const year = momentDate.year();
+    const month = momentDate.month() + 1;
+    const day = momentDate.date();
+
+    const habitYear: IHabitYear = {
+      year,
+      months: [
+        {
+          month,
+          days: [
+            {
+              day,
+              habitChecks: [
+                {
+                  id: this.counter++,
+                  isChecked: true,
+                  streak: 7,
+                  habitId
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    this.cache(habitYear);
   }
 
   update(checkId: number) {
-    this.httpClient.put<HabitCheck>(`checks`, {
-      checkId
-    }).subscribe(
-      resp => {
+    // this.httpClient.put<IHabitYear>(`checks`, {
+    //   checkId
+    // }).subscribe(
+    //   resp => {
+    //      this.cache(resp)
+    //   }
+    // );
 
-      }
+    let year;
+    let month;
+    let day;
+    let habitId;
+    let isChecked;
+    let habitChecks = [];
+
+    this.checkedDatesCache.some(y =>
+      y.months.some(m =>
+        m.days.some(d =>
+          d.habitChecks.some(c => {
+            if (c.id === checkId) {
+              ({year} = y);
+              ({month} = m);
+              ({day} = d);
+              ({habitId, isChecked} = c);
+              habitChecks = d.habitChecks;
+              return true;
+            }
+          })
+        )
+      )
     );
+
+    const habitYear: IHabitYear = {
+      year,
+      months: [
+        {
+          month,
+          days: [
+            {
+              day,
+              habitChecks: [
+                ...habitChecks.filter(check => check.id !== checkId),
+                {
+                  id: checkId,
+                  isChecked: !isChecked,
+                  streak: 7,
+                  habitId
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    this.cache(habitYear);
   }
 
   private getDayFromServer(date: string) {
@@ -49,6 +128,7 @@ export class CheckedDateService {
     //   resp => this.cache(resp)
     // );
 
+    console.log('getDayFromServer', date);
     this.cache(mockResponseFromServer);
   }
 
@@ -57,6 +137,7 @@ export class CheckedDateService {
     //   resp => this.cache(resp)
     // );
 
+    console.log('getMonthFromServer', date);
     this.cache(mockResponseFromServer);
   }
 
@@ -80,7 +161,7 @@ export class CheckedDateService {
 
   getHabitMonthWithMoment(momentDate: moment.Moment): Observable<HabitMonth> {
     if (!this.getMonthFromCacheWithMoment(momentDate)) {
-      this.getMonthFromServer(momentDate.format('DD-MM-YYYY'));
+      this.getMonthFromServer(momentDate.format('MM-YYYY'));
     }
 
     return this.checkedDatesCache$.pipe(

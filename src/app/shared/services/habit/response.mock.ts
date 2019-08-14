@@ -1,4 +1,4 @@
-export const response = [
+export const mockResponseFromServer = [
     {
       id: 1,
       name: 'Ler',
