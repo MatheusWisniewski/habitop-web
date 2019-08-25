@@ -134,3 +134,13 @@
         font-size: 40px;
     }
 }
+
+.no-habit-text {
+    font-size: 20px;
+    text-align: center;
+    padding: 20px;
+
+    @include for-sm-up {
+        font-size: 30px;
+    }
+}

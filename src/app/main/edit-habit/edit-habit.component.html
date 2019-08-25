@@ -1,14 +1,13 @@
 <div class="edit-habit">
     <form #form
         class="form" 
-        [formGroup]="habitForm" 
-        (ngSubmit)="onSubmit()">
+        [formGroup]="habitForm">
     
         <div class="header">
             <button mat-button
                 class="side-button"
                 color="accent"
-                routerLink="/{{checkedDateService?.lastNavigatedDate}}" 
+                routerLink="/{{habitService?.lastNavigatedDate}}" 
                 routerLinkActive="active">
                 
                 Voltar
@@ -19,81 +18,88 @@
             </div>
     
             <button mat-button
+                #submitButton
                 class="side-button"
                 type="submit"
+                (click)="onSubmit()"
                 color="accent"
-                [disabled]="!habitForm?.valid"
-                (click)="onClickedSave()">
+                [disabled]="!habitForm?.valid">
                 
                 Salvar
             </button>
         </div>
     
-        <div class="name-row">
-            <mat-form-field class="name-wrapper field">
-                <input #name
-                    matInput 
-                    formControlName="name"
-                    placeholder="Nome" />
-                <mat-error *ngIf="name?.value?.length > 0">Já existe um hábito com esse nome</mat-error>
-            </mat-form-field>
-        </div>
-    
-        <div class="icon-color-row">
-    
-            <div class="icon-text-wrapper">
-                <div class="icon-wrapper"
-                    (click)="onClickedIcon()">
-                    <app-icon size="lg" [color]="habit?.color">{{habit?.icon}}</app-icon>
-                </div>
-                <div class="text">Ícone</div>
+        <div class="form-body"
+            *ngIf="!isLoading">
+
+            <div class="name-row">
+                <mat-form-field class="name-wrapper field">
+                    <input #name
+                        matInput 
+                        formControlName="name"
+                        placeholder="Nome" />
+                    <mat-error *ngIf="name?.value?.length > 0">Já existe um hábito com esse nome</mat-error>
+                </mat-form-field>
             </div>
         
-            <div class="icon-text-wrapper">
-                <div class="icon-wrapper"
-                    (click)="onClickedColor()">
-                    <app-icon size="lg" [color]="habit?.color">lens</app-icon>
+            <div class="icon-color-row">
+        
+                <div class="icon-text-wrapper">
+                    <div class="icon-wrapper"
+                        (click)="onClickedIcon()">
+                        <app-icon size="lg" [color]="habit?.color">{{habit?.icon}}</app-icon>
+                    </div>
+                    <div class="text">Ícone</div>
                 </div>
-                <div class="text">Cor</div>
-            </div>
-        </div>
-
-        <div class="frequency-section">
-
-            <div class="title-wrapper">
-                <hr>
-                <div class="text">
-                    quero fazer nesses dias:
+            
+                <div class="icon-text-wrapper">
+                    <div class="icon-wrapper"
+                        (click)="onClickedColor()">
+                        <app-icon size="lg" [color]="habit?.color">lens</app-icon>
+                    </div>
+                    <div class="text">Cor</div>
                 </div>
-                <hr>
             </div>
-
-            <div class="weekdays-row">
-                <app-weekday-circle *ngFor="let weekdayNumber of weekdays"
-                    [weekdayNumber]="weekdayNumber"
-                    [color]="habit?.color"
-                    [selected]="habit?.weekdays?.includes(weekdayNumber) && habit?.weekdays?.length < 7"
-                    (clickedWeekday)="onClickedWeekday(weekdayNumber)">
-                </app-weekday-circle>
+    
+            <div class="frequency-section">
+    
+                <div class="title-wrapper">
+                    <hr>
+                    <div class="text">
+                        quero fazer nesses dias:
+                    </div>
+                    <hr>
+                </div>
+    
+                <div class="weekdays-row">
+                    <app-weekday-circle *ngFor="let weekdayNumber of weekdays"
+                        [weekdayNumber]="weekdayNumber"
+                        [color]="habit?.color"
+                        [selected]="habit?.weekdays?.includes(weekdayNumber) && habit?.weekdays?.length < 7"
+                        (clickedWeekday)="onClickedWeekday(weekdayNumber)">
+                    </app-weekday-circle>
+                </div>
+    
+                <div class="everyday-wrapper {{habit?.weekdays?.length === 7 ? iconService?.getClass(habit?.color) : ''}}">
+                    <button mat-raised-button
+                        class="everyday-button"
+                        [color]="habit?.weekdays?.length === 7 ? iconService?.getMatColor(habit?.color) : ''"
+                        (click)="onClickedEveryDayButton()">
+                        Todos os dias
+                    </button>
+                </div>
             </div>
-
-            <div class="everyday-wrapper {{habit?.weekdays?.length === 7 ? iconService?.getClass(habit?.color) : ''}}">
-                <button mat-raised-button
-                    class="everyday-button"
-                    [color]="habit?.weekdays?.length === 7 ? iconService?.getMatColor(habit?.color) : ''"
-                    (click)="onClickedEveryDayButton()">
-                    Todos os dias
-                </button>
-            </div>
+    
+            <button *ngIf="!isNew"
+                mat-raised-button
+                class="delete-button"
+                (click)="onClickedDelete()">
+                <mat-icon>delete</mat-icon>
+                <span class="text">Deletar</span> 
+            </button>
         </div>
-
-        <button *ngIf="!isNew"
-            mat-raised-button
-            class="delete-button"
-            (click)="onClickedDelete()">
-            <mat-icon>delete</mat-icon>
-            <span class="text">Deletar</span> 
-        </button>
+        
+        <mat-progress-spinner *ngIf="isLoading"></mat-progress-spinner>
     </form>
 </div>
 

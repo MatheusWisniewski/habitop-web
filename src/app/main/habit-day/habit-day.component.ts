@@ -8,10 +8,8 @@ import { Subscription, Observable } from 'rxjs';
 import { HabitService } from 'src/app/shared/services/habit/habit.service';
 import { CheckedDateService } from 'src/app/shared/services/checked-date/checked-date.service';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
-import { HabitWithDayInfo } from 'src/app/shared/models/habit-with-day-info';
-import { TransitionGroupComponent } from 'src/app/shared/components/transition-group/transition-group.component';
-import { TransitionGroupItemDirective } from 'src/app/shared/directives/transition-group-item/transition-group-item.directive';
-import { DateCircleInfo } from 'src/app/shared/models/date-circle-info.model';
+import { Habit } from 'src/app/shared/models/habit.model';
+import { DATE_FORMAT, MONTH_DATE_FORMAT } from 'src/app/shared/config';
 moment.locale('pt-BR');
 
 @Component({
@@ -21,9 +19,7 @@ moment.locale('pt-BR');
   providers: [
     HabitCardComponent,
     DateCircleComponent,
-    IconComponent,
-    TransitionGroupComponent,
-    TransitionGroupItemDirective
+    IconComponent
   ]
 })
 export class HabitDayComponent implements OnInit, OnDestroy {
@@ -36,9 +32,10 @@ export class HabitDayComponent implements OnInit, OnDestroy {
   previousDate: string;
   nextDate: string;
   title: string;
-  habitsWithDayInfo$: Observable<HabitWithDayInfo[]>;
-  previousWeeksChecks: DateCircleInfo[];
   weekday: string;
+  isToday: boolean;
+  habits$: Observable<Habit[]>;
+  previousWeekDates: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -49,9 +46,7 @@ export class HabitDayComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.router.events.subscribe((event) => {
         if (event instanceof NavigationEnd) {
-          this.formatRouterDate();
-          this.habitsWithDayInfo$ = this.habitService.getHabitsWithDayInfo(this.momentDate);
-          this.setPreviousWeekValues();
+          this.handleRouterDateChange();
         }
       })
     );
@@ -64,34 +59,33 @@ export class HabitDayComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  formatRouterDate() {
+  handleRouterDateChange() {
     this.date = this.route.snapshot.params.date;
-    const re = /^\d{1,2}\-\d{1,2}\-\d{2,4}$/;
+    this.momentDate = moment(this.date, DATE_FORMAT);
+    const re = /^\d{4}\-\d{2}\-\d{2}$/;
 
     if (!this.date || !this.date.match(re)) {
-      this.date = moment().format('DD-MM-YYYY');
+      this.date = moment().format(DATE_FORMAT);
       this.router.navigateByUrl(`/${this.date}`);
+      return;
     }
 
-    this.momentDate = moment(this.date, 'DD-MM-YYYY');
-    this.date = this.momentDate.format('DD-MM-YYYY');
-    this.checkedDateService.lastNavigatedDate = this.date;
-    this.monthDate = this.momentDate.format('MM-YYYY');
-    this.previousDate = this.momentDate.clone().subtract(1, 'day').format('DD-MM-YYYY');
-    this.nextDate = this.momentDate.clone().add(1, 'day').format('DD-MM-YYYY');
+    this.checkedDateService.getDayFromServer(this.momentDate.format(DATE_FORMAT));
+    this.date = this.momentDate.format(DATE_FORMAT);
+    this.habits$ = this.habitService.getHabitsThatHappenOnDate(this.date);
+    this.habitService.lastNavigatedDate = this.date;
+    this.monthDate = this.momentDate.format(MONTH_DATE_FORMAT);
+    this.previousDate = this.momentDate.clone().subtract(1, 'day').format(DATE_FORMAT);
+    this.nextDate = this.momentDate.clone().add(1, 'day').format(DATE_FORMAT);
 
     this.title = this.momentDate.year() === moment().year()
       ? this.momentDate.format('D [de] MMMM')
       : this.momentDate.format('D [de] MMMM [de] YYYY');
-    this.weekday = this.momentDate.format('dddd') + (this.momentDate.startOf('day').isSame(moment().startOf('day')) ? ' (Hoje)' : '');
-  }
 
-  onClickedCheck(habitWithDayInfo: HabitWithDayInfo) {
-    if (habitWithDayInfo.checkId) {
-      this.checkedDateService.update(habitWithDayInfo.checkId);
-    } else {
-      this.checkedDateService.create(habitWithDayInfo.id, this.momentDate.format('DD-MM-YYYY'));
-    }
+    this.isToday = this.momentDate.startOf('day').isSame(moment().startOf('day'));
+    this.weekday = this.momentDate.format('dddd') + (this.isToday ? ' (Hoje)' : '');
+
+    this.setPreviousWeekValues();
   }
 
   habitsWithDayInfoTrackByFn(index, item) {
@@ -99,10 +93,10 @@ export class HabitDayComponent implements OnInit, OnDestroy {
   }
 
   setPreviousWeekValues() {
-    this.previousWeeksChecks = [];
+    this.previousWeekDates = [];
 
     for (let i = 0; i < 7; i++) {
-      this.previousWeeksChecks.push(this.habitService.getDateCircleInfo(moment().subtract(i, 'days')));
+      this.previousWeekDates.push(moment().subtract(i, 'days').format(DATE_FORMAT));
     }
   }
 }

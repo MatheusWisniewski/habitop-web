@@ -1,49 +1,50 @@
 <div class="signup">
-    <div class="title">Cadastro</div>
+    <div class="scroll-container">
+        <div class="title">Cadastro</div>
 
-    <form [formGroup]="signupForm" 
-        (ngSubmit)="onSubmit()" 
-        class="form">
+        <form [formGroup]="signupForm" 
+            (ngSubmit)="onSubmit()" 
+            class="form">
+        
+            <mat-form-field class="field">
+                <input matInput 
+                    formControlName="email"
+                    placeholder="Email" />
+            </mat-form-field>
+        
+            <mat-form-field class="field">
+                <input matInput 
+                    #password
+                    formControlName="password"
+                    type="password"
+                    placeholder="Senha" />
+                
+                <mat-hint align="end">{{password?.value?.length > 8 ? '8' : password?.value?.length}}/8</mat-hint>
+            </mat-form-field>
+        
+            <mat-form-field class="field">
+                <input matInput 
+                    #passwordRepeat
+                    formControlName="passwordRepeat"
+                    type="password"
+                    placeholder="Repita sua senha" />
+        
+                <mat-hint align="end">{{passwordRepeat?.value?.length > 8 ? '8' : passwordRepeat?.value?.length}}/8</mat-hint>
+                <mat-error *ngIf="password?.value !== passwordRepeat?.value" align="start"><strong>A senhas duas senhas devem ser iguais.</strong></mat-error>
+            </mat-form-field>
     
-        <mat-form-field class="field">
-            <input matInput 
-                formControlName="email"
-                placeholder="Email" />
-        </mat-form-field>
+            <button mat-raised-button
+                class="submit-button"
+                color="accent"
+                type="submit"
+                [disabled]="!signupForm?.valid">
+                Cadastrar-se
+            </button>
     
-        <mat-form-field class="field">
-            <input matInput 
-                #password
-                formControlName="password"
-                type="password"
-                placeholder="Senha" />
-            
-            <mat-hint align="end">{{password.value.length > 8 ? '8' : password.value.length}}/8</mat-hint>
-            <mat-error align="start"><strong>A senha deve ter pelo menos um caracter especial, uma letra maiúscula, uma minúscula e um número.</strong> </mat-error>
-        </mat-form-field>
-    
-        <mat-form-field class="field">
-            <input matInput 
-                #passwordRepeat
-                formControlName="passwordRepeat"
-                type="password"
-                placeholder="Repita sua senha" />
-    
-            <mat-hint align="end">{{passwordRepeat.value.length > 8 ? '8' : passwordRepeat.value.length}}/8</mat-hint>
-            <mat-error align="start"><strong>A senha deve ter pelo menos um caracter especial, uma letra maiúscula, uma minúscula e um número.</strong> </mat-error>
-        </mat-form-field>
-    
-        <button mat-raised-button
-            class="submit-button"
-            color="accent"
-            type="submit"
-            [disabled]="!signupForm?.valid">
-            Cadastrar-se
-        </button>
-
-        <div class="option">
-            ou <a class="link" routerLink="/welcome/login">fazer login</a>
-        </div>
-    </form>
+            <div class="option">
+                ou <a class="link" routerLink="/welcome/login">fazer login</a>
+            </div>
+        </form>
+    </div>
 </div>
 

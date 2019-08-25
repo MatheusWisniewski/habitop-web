@@ -25,8 +25,8 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { IconComponent } from './shared/components/icon/icon.component';
 import { WeekdayCircleComponent } from './main/edit-habit/weekday-circle/weekday-circle.component';
 import { IconPickerModalComponent } from './main/edit-habit/icon-picker-modal/icon-picker-modal.component';
-import { TransitionGroupComponent } from './shared/components/transition-group/transition-group.component';
-import { TransitionGroupItemDirective } from './shared/directives/transition-group-item/transition-group-item.directive';
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const materialModules = [
   MatInputModule,
@@ -34,7 +34,9 @@ const materialModules = [
   FormsModule,
   ReactiveFormsModule,
   MatButtonModule,
-  MatIconModule
+  MatIconModule,
+  MatSnackBarModule,
+  MatProgressSpinnerModule
 ];
 
 @NgModule({
@@ -54,9 +56,7 @@ const materialModules = [
     HeaderComponent,
     IconComponent,
     WeekdayCircleComponent,
-    IconPickerModalComponent,
-    TransitionGroupComponent,
-    TransitionGroupItemDirective
+    IconPickerModalComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +68,14 @@ const materialModules = [
   exports: [
     ...materialModules
   ],
-  providers: [],
+  providers: [
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: {
+        duration: 5000
+      }
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -5,6 +5,9 @@
     height: 50px;
     background-color: $habitop-primary;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
     @include for-sm-up {
         height: 70px;
@@ -15,7 +18,7 @@
         flex-direction: row;
         align-items: center;
         height: 100%;
-        padding-left: 20px;
+        padding: 0 20px;
 
         & > .title {
             margin-left: 10px;

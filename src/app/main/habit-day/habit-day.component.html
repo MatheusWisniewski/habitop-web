@@ -25,13 +25,17 @@
     </div>
 
     <div class="center">
-        <app-transition-group class="scroll-container flip-list">
-            <app-habit-card *ngFor="let habitWithDayInfo of (habitsWithDayInfo$ | async); trackBy: habitsWithDayInfoTrackByFn"
-                appTransitionGroupItem
-                [habitWithDayInfo]="habitWithDayInfo"
-                (clickedCheck)="onClickedCheck(habitWithDayInfo)">
+        <div class="scroll-container">
+            <app-habit-card *ngFor="let habit of (habits$ | async); trackBy: habitsTrackByFn"
+                [habit]="habit"
+                [date]="date">
             </app-habit-card>
-        </app-transition-group>
+            
+            <div *ngIf="(habits$ | async) && (habits$ | async).length === 0"
+                class="no-habit-text">
+                Nenhum hábito {{isToday ? 'hoje' : 'nesse dia'}}!
+            </div>
+        </div>
         
         <button mat-fab
             class="floating-button"
@@ -46,11 +50,9 @@
     
     <div class="bottom">
         <div class="circles">
-            <app-date-circle *ngFor="let dayCheck of previousWeeksChecks"
-                [date]="dayCheck?.date"
+            <app-date-circle *ngFor="let previousWeekDate of previousWeekDates"
+                [date]="previousWeekDate"
                 [selectedDate]="date"
-                [isOneChecked]="(dayCheck?.checks$ | async)?.isOneChecked"
-                [isAllChecked]="(dayCheck?.checks$ | async)?.isAllChecked"
                 format="week">
             </app-date-circle>
 

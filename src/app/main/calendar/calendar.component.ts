@@ -4,12 +4,10 @@ import * as moment from 'moment';
 import 'moment/locale/pt-br';
 import { Subscription, Observable } from 'rxjs';
 import { DateCircleComponent } from 'src/app/shared/components/date-circle/date-circle.component';
-import { CheckedDateService } from 'src/app/shared/services/checked-date/checked-date.service';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
-import { HabitMonth } from 'src/app/shared/models/habit-month.model';
 import { HabitService } from 'src/app/shared/services/habit/habit.service';
-import { DateCircleInfo } from 'src/app/shared/models/date-circle-info.model';
-import { combineLatest } from 'rxjs/operators';
+import { DATE_FORMAT, MONTH_DATE_FORMAT } from 'src/app/shared/config';
+import { CheckedDateService } from 'src/app/shared/services/checked-date/checked-date.service';
 moment.locale('pt-BR');
 
 @Component({
@@ -31,38 +29,21 @@ export class CalendarComponent implements OnInit, OnDestroy {
   nextMonthDate: string;
   title: string;
   weekdays: string[] = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-  habitMonth$: Observable<HabitMonth>;
   numberOfPerfectDays$: Observable<number>;
-  datesMatrix: DateCircleInfo[][] = [];
+  datesMatrix: string[][] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private checkedDateService: CheckedDateService,
-    private habitService: HabitService
+    private habitService: HabitService,
+    private checkedDateService: CheckedDateService
   ) {
     this.subscriptions.push(
       this.router.events.subscribe((event) => {
         if (event instanceof NavigationEnd) {
           // do some logic again when I click same url
           this.formatRouterDate();
-          this.habitMonth$ = this.checkedDateService.getHabitMonthWithMoment(this.momentDate);
-          this.numberOfPerfectDays$ = this.habitMonth$.pipe(
-            combineLatest(
-              this.habitService.getHabits(),
-              (habitMonth, habits) => {
-                  return habitMonth.days.reduce((acc, cur) => {
-                    const weekday = this.momentDate.clone().date(cur.day).weekday();
-                    return acc += cur.habitChecks.filter(check => {
-                      const habit = habits.find(h => h.id === check.habitId);
-                      return habit && habit.weekdays.includes(weekday);
-                    }).reduce((accc, curr) => {
-                      return accc && curr.isChecked;
-                    }, true) ? 1 : 0;
-                  }, 0);
-              }
-            )
-          );
+          this.numberOfPerfectDays$ = this.habitService.getNumberOfPerfectDaysInMonth(this.date);
           this.buildDatesMatrix();
         }
       })
@@ -78,18 +59,19 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   formatRouterDate() {
     this.date = this.route.snapshot.params.date;
-    const re = /^\d{1,2}\-\d{2,4}$/;
+    const re = /^\d{4}\-\d{2}$/;
 
     if (!this.date || !this.date.match(re)) {
-      this.date = moment().format('MM-YYYY');
+      this.date = moment().format(MONTH_DATE_FORMAT);
       this.router.navigateByUrl(`/calendar/${this.date}`);
     }
 
-    this.momentDate = moment(this.date, 'MM-YYYY');
-    this.date = this.momentDate.format('MM-YYYY');
-    this.previousMonthDate = this.momentDate.clone().subtract(1, 'month').format('MM-YYYY');
-    this.nextMonthDate = this.momentDate.clone().add(1, 'month').format('MM-YYYY');
+    this.momentDate = moment(this.date, MONTH_DATE_FORMAT);
+    this.date = this.momentDate.format(MONTH_DATE_FORMAT);
+    this.previousMonthDate = this.momentDate.clone().subtract(1, 'month').format(MONTH_DATE_FORMAT);
+    this.nextMonthDate = this.momentDate.clone().add(1, 'month').format(MONTH_DATE_FORMAT);
     this.title = this.momentDate.format('MMMM (YYYY)');
+    this.checkedDateService.getMonthFromServer(this.date);
   }
 
   buildDatesMatrix() {
@@ -101,17 +83,17 @@ export class CalendarComponent implements OnInit, OnDestroy {
     for (let i = 0; i < 6; i++) {
       const row = [];
       for (let j = i * 7; j < 7 + i * 7; j++) {
-        row.push(this.habitService.getDateCircleInfo(this.momentDate.clone().startOf('month').add(j - firstWeekday, 'day')));
+        row.push(this.momentDate.clone().startOf('month').add(j - firstWeekday, 'day').format(DATE_FORMAT));
       }
       this.datesMatrix.push(row);
     }
 
-    if (moment(this.datesMatrix[this.datesMatrix.length - 1][0].date, 'DD-MM-YYYY').month() !== this.momentDate.month()) {
+    if (moment(this.datesMatrix[this.datesMatrix.length - 1][0], DATE_FORMAT).month() !== this.momentDate.month()) {
       this.datesMatrix.pop();
     }
   }
 
   notThisMonth(date: string): boolean {
-    return moment(date, 'DD-MM-YYYY').month() !== this.momentDate.month();
+    return moment(date, DATE_FORMAT).month() !== this.momentDate.month();
   }
 }

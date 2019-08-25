@@ -2,8 +2,8 @@
     'month-circle': format === 'month',
     'opaque': opaque,
     'emphasize': emphasize,
-    'one-checked': isOneChecked && !isAllChecked,
-    'all-checked': isAllChecked
+    'one-checked': (isOneChecked$ | async) && !(isAllChecked$ | async),
+    'all-checked': (isOneChecked$ | async) && (isAllChecked$ | async)
 }">
     <a class="link"
         routerLink="/{{date}}" 

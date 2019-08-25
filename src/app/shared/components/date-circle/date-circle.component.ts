@@ -1,6 +1,9 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
+import { HabitService } from '../../services/habit/habit.service';
+import { DATE_FORMAT } from '../../config';
+import { Observable } from 'rxjs';
 moment.locale('pt-br');
 
 @Component({
@@ -14,18 +17,22 @@ export class DateCircleComponent implements OnChanges {
   @Input() format: 'week' | 'month' = 'month';
   @Input() opaque: boolean;
   @Input() selectedDate: string;
-  @Input() isOneChecked: boolean;
-  @Input() isAllChecked: boolean;
 
   displayText: string;
   emphasize: boolean;
   momentDate: moment.Moment;
   isToday: boolean;
+  isOneChecked$: Observable<boolean>;
+  isAllChecked$: Observable<boolean>;
 
-  constructor() { }
+  constructor(
+    private habitService: HabitService
+  ) { }
 
   ngOnChanges() {
-    this.momentDate = moment(this.date, 'DD-MM-YYYY');
+    this.momentDate = moment(this.date, DATE_FORMAT);
+    this.isOneChecked$ = this.habitService.isOneCheckedOnDate$(this.date);
+    this.isAllChecked$ = this.habitService.isAllCheckedOnDate$(this.date);
 
     switch (this.format) {
       case 'month': this.handleMonthView(); break;

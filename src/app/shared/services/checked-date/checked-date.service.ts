@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
-import { HabitYear, IHabitYear } from '../../models/habit-year.model';
-import { mockResponseFromServer } from './response.mock';
-import { HabitDay } from '../../models/habit-day.model';
-import { HabitMonth } from '../../models/habit-month.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { API_URL, DATE_FORMAT, MONTH_DATE_FORMAT } from '../../config';
+import { CheckedDate } from '../../models/checked-date.model';
+import { HabitService } from '../habit/habit.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 moment.locale('pt-BR');
 
 @Injectable({
@@ -15,239 +14,125 @@ moment.locale('pt-BR');
 })
 export class CheckedDateService {
 
-  checkedDatesCache: HabitYear[] = [];
-  checkedDatesCache$ = new BehaviorSubject<HabitYear[]>([]);
-  lastNavigatedDate: string;
+  alreadyCalledDates: string[] = [];
 
-  counter = 100;
+  USER_RESOURCE_URL = () => API_URL + 'users/' + localStorage.getItem('user_id') + '/checked-dates/';
+
+  HABIT_RESOURCE_URL = () => API_URL + 'habits/';
+
+  CHECKED_DATE_RESOURCE_URL = () => API_URL + 'checked-dates/';
 
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private habitService: HabitService,
+    private snackBar: MatSnackBar
   ) {
   }
 
-  create(habitId: number, date: string) {
-    // this.httpClient.post<IHabitYear>('checks', {
-    //   habitId,
-    //   date
-    // }).subscribe(resp => {
-    //      this.cache(resp)
-    // });
+  create(checkedDate: CheckedDate) {
+    const {habitId, ...checkWithoutHabitId} = checkedDate;
+    checkWithoutHabitId.isChecked = true;
+    checkWithoutHabitId.streak++;
 
-    const momentDate = moment(date, 'DD-MM-YYYY');
-    const year = momentDate.year();
-    const month = momentDate.month() + 1;
-    const day = momentDate.date();
-
-    const habitYear: IHabitYear = {
-      year,
-      months: [
-        {
-          month,
-          days: [
-            {
-              day,
-              habitChecks: [
-                {
-                  id: this.counter++,
-                  isChecked: true,
-                  streak: 7,
-                  habitId
-                }
-              ]
-            }
-          ]
+    this.httpClient.post<CheckedDate[]>(
+      this.HABIT_RESOURCE_URL() + habitId + '/checked-dates',
+      checkWithoutHabitId
+      ).subscribe(
+        resp => {
+          this.cache(resp);
+        },
+        err => {
+          this.snackBar.open(err.error);
         }
-      ]
-    };
-
-    this.cache(habitYear);
+      );
   }
 
-  update(checkId: number) {
-    // this.httpClient.put<IHabitYear>(`checks`, {
-    //   checkId
-    // }).subscribe(
-    //   resp => {
-    //      this.cache(resp)
-    //   }
-    // );
-
-    let year;
-    let month;
-    let day;
-    let habitId;
-    let isChecked;
-    let habitChecks = [];
-
-    this.checkedDatesCache.some(y =>
-      y.months.some(m =>
-        m.days.some(d =>
-          d.habitChecks.some(c => {
-            if (c.id === checkId) {
-              ({year} = y);
-              ({month} = m);
-              ({day} = d);
-              ({habitId, isChecked} = c);
-              habitChecks = d.habitChecks;
-              return true;
-            }
-          })
-        )
-      )
-    );
-
-    const habitYear: IHabitYear = {
-      year,
-      months: [
-        {
-          month,
-          days: [
-            {
-              day,
-              habitChecks: [
-                ...habitChecks.filter(check => check.id !== checkId),
-                {
-                  id: checkId,
-                  isChecked: !isChecked,
-                  streak: 7,
-                  habitId
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    };
-
-    this.cache(habitYear);
-  }
-
-  private getDayFromServer(date: string) {
-    // this.httpClient.get<IHabitYear>(`checks?date=${date}`).subscribe(
-    //   resp => this.cache(resp)
-    // );
-
-    console.log('getDayFromServer', date);
-    this.cache(mockResponseFromServer);
-  }
-
-  private getMonthFromServer(date: string) {
-    // this.httpClient.get<IHabitYear>(`checks?date=${date}`).subscribe(
-    //   resp => this.cache(resp)
-    // );
-
-    console.log('getMonthFromServer', date);
-    this.cache(mockResponseFromServer);
-  }
-
-  getHabitDayWithMoment(momentDate: moment.Moment): Observable<HabitDay> {
-    if (!this.getDayFromCacheWithMoment(momentDate)) {
-      this.getDayFromServer(momentDate.format('DD-MM-YYYY'));
+  update(checkedDate: CheckedDate) {
+    const {habitId, ...checkWithoutHabitId} = checkedDate;
+    if (checkWithoutHabitId.isChecked) {
+      checkWithoutHabitId.streak--;
+    } else {
+      checkWithoutHabitId.streak++;
     }
+    checkWithoutHabitId.isChecked = !checkWithoutHabitId.isChecked;
 
-    return this.checkedDatesCache$.pipe(
-      map(habitYears => {
-        const year = habitYears.find(y => y.year === momentDate.year());
-        const month = year && year.getMonth(momentDate.month() + 1);
-        return month && month.getDay(momentDate.date());
-      })
+    this.httpClient.put<CheckedDate[]>(
+      this.CHECKED_DATE_RESOURCE_URL() + checkedDate.id,
+      checkWithoutHabitId
+    ).subscribe(
+      resp => {
+        this.cache(resp);
+      },
+      err => {
+        this.snackBar.open(err.error);
+      }
     );
   }
 
-  getHabitDay(date: string): Observable<HabitDay> {
-    return this.getHabitDayWithMoment(moment(date, 'DD-MM-YYYY'));
-  }
-
-  getHabitMonthWithMoment(momentDate: moment.Moment): Observable<HabitMonth> {
-    if (!this.getMonthFromCacheWithMoment(momentDate)) {
-      this.getMonthFromServer(momentDate.format('MM-YYYY'));
-    }
-
-    return this.checkedDatesCache$.pipe(
-      map(habitYears => {
-        const year = habitYears.find(y => y.year === momentDate.year());
-        return year && year.getMonth(momentDate.month() + 1);
-      })
-    );
-  }
-
-  getHabitMonth(date: string): Observable<HabitMonth> {
-    return this.getHabitMonthWithMoment(moment(date, 'MM-YYYY'));
-  }
-
-  private cache(habitYearFromServer: IHabitYear) {
-    const yearFromServer = this.json2habitYear(habitYearFromServer);
-    const yearFromCache = this.getYearFromCache(yearFromServer.year);
-
-    if (!yearFromCache) {
-      this.checkedDatesCache.push(yearFromServer);
-      this.checkedDatesCache$.next(this.checkedDatesCache);
+  getDayFromServer(date: string) {
+    if (this.alreadyCalledDates.find(alreadyCalledDate => alreadyCalledDate === date)) {
       return;
     }
 
-    yearFromServer.months.forEach(month => {
-      const monthFromCache = this.getMonthFromCache(month.month, yearFromServer.year);
+    this.alreadyCalledDates.push(date);
 
-      if (!monthFromCache) {
-        yearFromCache.months.push(month);
-      } else {
-        month.days.forEach(day => {
-          const dayFromCache = this.getDayFromCache(day.day, month.month, yearFromServer.year);
-
-          if (!dayFromCache) {
-            monthFromCache.days.push(day);
-          } else {
-            monthFromCache.days = [...monthFromCache.days.filter(d => d.day !== day.day), day];
-          }
-        });
+    this.httpClient.get<CheckedDate[]>(
+      this.USER_RESOURCE_URL() + `?startDate=${date}`
+    ).subscribe(
+      resp => {
+        this.cache(resp);
+      },
+      err => {
+        this.snackBar.open(err.error);
       }
+    );
+  }
+
+  getMonthFromServer(date: string) {
+    const momentDate = moment(date, MONTH_DATE_FORMAT).startOf('month');
+    const newDates = [];
+
+    while (momentDate.format(DATE_FORMAT) !== moment(date).endOf('month').format(DATE_FORMAT)) {
+      newDates.push(momentDate.format(DATE_FORMAT));
+      momentDate.add(1, 'day');
+    }
+
+    const alreadyCalledAll = newDates.reduce((acc, cur) => {
+      return acc && this.alreadyCalledDates.find(alreadyCalledDate => alreadyCalledDate === cur);
+    }, true);
+
+    if (alreadyCalledAll) {
+      return;
+    }
+
+    newDates.forEach(newDate => {
+      this.alreadyCalledDates = this.alreadyCalledDates.filter(alreadyCalledDate => alreadyCalledDate !== newDate);
+      this.alreadyCalledDates.push(newDate);
     });
 
-    this.checkedDatesCache$.next(this.checkedDatesCache);
+    const start = moment(date, MONTH_DATE_FORMAT).startOf('month').format(DATE_FORMAT);
+    const end = moment(date, MONTH_DATE_FORMAT).endOf('month').format(DATE_FORMAT);
+
+    this.httpClient.get<CheckedDate[]>(
+      this.USER_RESOURCE_URL() +
+      `?startDate=${start}&endDate=${end}`
+    ).subscribe(
+      resp => {
+        this.cache(resp);
+      },
+      err => {
+        this.snackBar.open(err.error);
+      }
+    );
   }
 
-  private json2habitYear(habitYearJson: IHabitYear) {
-    const mapDay = d => new HabitDay(d.day, d.habitChecks);
-    const mapMonth = m => new HabitMonth(m.month, m.days.map(mapDay));
-    const mapYear = y => new HabitYear(y.year, y.months.map(mapMonth));
+  private cache(checkedDates: CheckedDate[]) {
+    checkedDates.forEach(checkedDate => {
+      const habit = this.habitService.habits.find(h => h.id === checkedDate.habitId);
 
-    return mapYear(habitYearJson);
-  }
-
-  private getYearFromCache(year: number) {
-    return this.checkedDatesCache && this.checkedDatesCache.find(y => y.year === year);
-  }
-
-  private getMonthFromCache(month: number, year: number) {
-    const habitYear = this.getYearFromCache(year);
-
-    return habitYear && habitYear.getMonth(month);
-  }
-
-  private getMonthFromCacheWithMoment(momenthDate: moment.Moment) {
-    return this.getMonthFromCache(momenthDate.month() + 1, momenthDate.year());
-  }
-
-  private getDayFromCache(day: number, month: number, year: number) {
-    const habitMonth = this.getMonthFromCache(month, year);
-
-    return habitMonth && habitMonth.getDay(day);
-  }
-
-  private getDayFromCacheWithMoment(momentDate: moment.Moment) {
-    return this.getDayFromCache(momentDate.date(), momentDate.month() + 1, momentDate.year());
-  }
-
-  isOneCheckedOnDate(date: string) {
-    const momentDate = moment(date, 'DD-MM-YYYY');
-    const habitDay = this.getDayFromCacheWithMoment(momentDate);
-    return habitDay && habitDay.isOneChecked;
-  }
-
-  isAllCheckedOnDate(date: string) {
-    const momentDate = moment(date, 'DD-MM-YYYY');
-    const habitDay = this.getDayFromCacheWithMoment(momentDate);
-    return habitDay && habitDay.isAllChecked;
+      habit.checkedDates = habit.checkedDates && habit.checkedDates.filter(c => c.date !== checkedDate.date) || [];
+      habit.checkedDates.push(checkedDate);
+    });
+    this.habitService.broadcast();
   }
 }

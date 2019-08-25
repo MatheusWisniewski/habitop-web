@@ -4,8 +4,8 @@
         title="Clique para editar">
 
         <app-icon size="lg" 
-            [color]="habitWithDayInfo?.isChecked ? 'gray' : habitWithDayInfo?.color">
-            {{habitWithDayInfo?.icon}}
+            [color]="checkedDate?.isChecked ? 'gray' : habitLocal?.color">
+            {{habitLocal?.icon}}
         </app-icon>
     </div>
 
@@ -14,21 +14,26 @@
         title="Clique para editar">
         
         <div class="top">
-            <span class="title" [ngClass]="{'title-checked': habitWithDayInfo?.isChecked}">{{habitWithDayInfo?.name}}</span>
+            <span class="title" [ngClass]="{'title-checked': checkedDate?.isChecked}">{{habitLocal?.name}}</span>
         </div>
 
         <div class="bottom">
             <app-icon size="sm"
-                [color]="habitWithDayInfo?.isChecked ? 'green' : habitWithDayInfo?.color">
-                {{habitWithDayInfo?.isChecked ? 'check_box' : 'play_arrow'}}
+                [color]="checkedDate?.isChecked ? 'green' : habitLocal?.color">
+                {{checkedDate?.isChecked ? 'check_box' : 'play_arrow'}}
             </app-icon>
 
             <div class="text">
-                <span *ngIf="habitWithDayInfo?.streak > 0" [ngClass]="{'done': habitWithDayInfo?.isChecked}">
-                    {{habitWithDayInfo?.streak}} em seguida<span *ngIf="habitWithDayInfo?.isChecked">! FEITO!</span><span *ngIf="!habitWithDayInfo?.isChecked">. Continue!</span>
+                <span *ngIf="checkedDate?.streak > 0" [ngClass]="{'done': checkedDate?.isChecked}">
+                    <span *ngIf="checkedDate?.streak === 1 && checkedDate?.isChecked">
+                        O primeiro de muitos!
+                    </span>
+                    <span *ngIf="checkedDate?.streak !== 1 || !checkedDate?.isChecked">
+                        {{checkedDate?.streak}} em seguida<span *ngIf="checkedDate?.isChecked">! FEITO!</span><span *ngIf="!checkedDate?.isChecked">. Continue!</span>
+                    </span>
                 </span>
     
-                <span *ngIf="!habitWithDayInfo?.streak || habitWithDayInfo?.streak === 0">
+                <span *ngIf="!checkedDate?.streak || checkedDate?.streak === 0">
                     Comece a sequência!
                 </span>
             </div>
@@ -39,8 +44,8 @@
         (click)="onClickedCheck()"
         title="Clique para marcar como feito">
         <app-icon size="lg" 
-            [color]="habitWithDayInfo?.isChecked ? 'green' : 'black'">
-            {{habitWithDayInfo?.isChecked ? 'check_box' : 'check_box_outline_blank'}}
+            [color]="checkedDate?.isChecked ? 'green' : 'black'">
+            {{checkedDate?.isChecked ? 'check_box' : 'check_box_outline_blank'}}
         </app-icon>
     </div>
 </div>

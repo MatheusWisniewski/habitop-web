@@ -53,6 +53,7 @@
                 font-weight: bold;
                 font-size: 22px;
                 margin-bottom: 10px;
+                text-transform: capitalize;
 
                 @include for-sm-up {
                     font-size: 28px;

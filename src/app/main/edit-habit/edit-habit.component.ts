@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { HabitService } from 'src/app/shared/services/habit/habit.service';
@@ -9,6 +9,7 @@ import { CheckedDateService } from 'src/app/shared/services/checked-date/checked
 import { WeekdayCircleComponent } from './weekday-circle/weekday-circle.component';
 import { IconService } from 'src/app/shared/services/icon/icon.service';
 import { IconPickerModalComponent } from './icon-picker-modal/icon-picker-modal.component';
+import { Subscription } from 'rxjs';
 moment.locale('pt-BR');
 
 @Component({
@@ -20,14 +21,23 @@ moment.locale('pt-BR');
     IconPickerModalComponent
   ]
 })
-export class EditHabitComponent implements OnInit {
+export class EditHabitComponent implements OnInit, OnDestroy {
+
+  subscriptions: Subscription[] = [];
 
   title: string;
   isNew: boolean;
   habitForm: FormGroup;
-  habit: Habit;
+  habit: Habit = {
+    name: '',
+    icon: 'star',
+    color: 'blue',
+    weekdays: [0, 1, 2, 3, 4, 5, 6],
+    createdDate: null
+  };
   showIconPickerModal: boolean;
   showColorPickerModal: boolean;
+  isLoading: boolean;
 
   weekdays = [0, 1, 2, 3, 4, 5, 6];
 
@@ -40,36 +50,43 @@ export class EditHabitComponent implements OnInit {
     private router: Router
   ) {
     this.isNew = this.route.snapshot.data.isNew;
+    this.habitForm = this.fb.group({
+      name: [this.habit && this.habit.name, [this.newNameValidator(), Validators.required]]
+    });
 
     if (this.isNew) {
-      this.habit = {
-        name: '',
-        icon: 'star',
-        color: 'blue',
-        weekdays: [0, 1, 2, 3, 4, 5, 6],
-        creationDate: moment().format('DD-MM-YYYY')
-      };
-
       this.title = 'Novo hábito';
-
     } else {
-      this.habit = this.habitService.getHabitWithFormattedName(this.route.snapshot.params.name);
+      this.isLoading = true;
 
-      if (!this.habit) {
-        this.router.navigateByUrl('/404');
-      }
+      this.subscriptions.push(
+        this.habitService.getHabitWithFormattedName(this.route.snapshot.params.name)
+          .subscribe(
+            habit => {
+              if (habit === undefined) {
+                return;
+              }
+
+              if (!habit || !habit.id) {
+                this.router.navigateByUrl('/404');
+              } else {
+                this.habit = habit;
+                this.habitForm.patchValue({name: habit.name});
+                this.isLoading = false;
+              }
+            }
+          )
+      );
 
       this.title = 'Editar hábito';
     }
-
-    this.habitForm = this.fb.group({
-      name: [this.habit.name, [this.newNameValidator(), Validators.required]],
-      icon: [this.habit.icon],
-      color: [this.habit.color]
-    });
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   onClickedWeekday(weekdayNumber: number) {
@@ -115,12 +132,29 @@ export class EditHabitComponent implements OnInit {
 
   newNameValidator(): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} | null => {
-      const alreadyHasThisName = this.habitService.habits.reduce((res, cur) => {
+      const alreadyHasThisName = this.habitService.habits && this.habitService.habits.reduce((res, cur) => {
         return res
           || (this.habit.id !== cur.id
           && this.habitService.formatHabitName(cur.name) === this.habitService.formatHabitName(control.value));
       }, false);
       return alreadyHasThisName ? {name: 'Já existe um hábito com esse nome'} : null;
     };
+  }
+
+  onSubmit() {
+    if (this.habit.id === undefined) {
+      this.habitService.createHabit(
+        this.habitForm.get('name').value,
+        this.habit.icon,
+        this.habit.color,
+        this.habit.weekdays
+      );
+    } else {
+      this.habitService.updateHabit({...this.habit, name: this.habitForm.get('name').value});
+    }
+  }
+
+  onClickedDelete() {
+    this.habitService.deleteHabit(this.habit);
   }
 }

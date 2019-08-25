@@ -1,8 +1,14 @@
-<header class="header"
-    routerLink="/" 
-    routerLinkActive="active">
+<header class="header">
 
-    <div class="app-name">
+    <div class="app-name"
+        routerLink="/" 
+        routerLinkActive="active">
         <mat-icon class="color-white">check_circle</mat-icon>  <div class="title">Habitop</div> 
+    </div>
+
+    <div *ngIf="isLoggedIn" 
+        class="app-name"
+        (click)="onClickedSignOut()">
+        <mat-icon class="color-white">exit_to_app</mat-icon> 
     </div>
 </header>

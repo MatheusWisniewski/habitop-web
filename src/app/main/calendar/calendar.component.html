@@ -32,14 +32,12 @@
             </div>
         </div>
 
-        <div *ngIf="(habitMonth$ | async)?.days?.length > 0" class="days-wrapper">
+        <div class="days-wrapper">
             <div *ngFor="let week of datesMatrix" 
                 class="week-row">
-                <app-date-circle *ngFor="let dateCircleInfo of week"
-                    [date]="dateCircleInfo?.date"
-                    [opaque]="notThisMonth(dateCircleInfo?.date)"
-                    [isOneChecked]="(dateCircleInfo?.checks$ | async)?.isOneChecked"
-                    [isAllChecked]="(dateCircleInfo?.checks$ | async)?.isAllChecked">
+                <app-date-circle *ngFor="let dateForCircle of week"
+                    [date]="dateForCircle"
+                    [opaque]="notThisMonth(dateForCircle)">
                 </app-date-circle>
             </div>
         </div>
