@@ -186,8 +186,7 @@ export class HabitService {
               date,
               isChecked: false,
               streak: 0,
-              habitId: habit.id,
-              previousId: null
+              habitId: habit.id
             };
           }
 
@@ -202,8 +201,7 @@ export class HabitService {
             date,
             isChecked: false,
             streak: previousCheckedDate.isChecked ? previousCheckedDate.streak : 0,
-            habitId: habit.id,
-            previousId: previousCheckedDate.id
+            habitId: habit.id
           };
         }
       )

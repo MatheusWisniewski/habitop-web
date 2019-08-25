@@ -3,6 +3,5 @@ export interface  CheckedDate {
     habitId: number;
     isChecked: boolean;
     streak: number;
-    previousId: number;
     date: string;
 }
